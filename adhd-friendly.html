@@ -3,76 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Prompt Builder: Dyslexia-friendly edition</title>
-<meta name="description" content="A dyslexia-friendly guide to using AI. Learn to ask AI for what you need, one step at a time. Read aloud, voice typing, reading ruler and adjustable text, colours and spacing.">
+<title>AI Prompt Builder: ADHD-friendly edition</title>
+<meta name="description" content="An ADHD-friendly guide to getting better results from AI. Short steps, focus mode, a gentle timer, a place to park stray thoughts, and prompts that ask AI for short, actionable answers.">
 <meta name="author" content="Liam Davis">
-<link rel="canonical" href="https://liam1davis.github.io/Apps/dyslexia-friendly.html">
+<link rel="canonical" href="https://liam1davis.github.io/Apps/adhd-friendly.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AI Prompt Builder: Dyslexia-friendly edition">
-<meta property="og:description" content="A dyslexia-friendly guide to asking AI for what you need. Listen, speak, and change the text to suit you.">
-<meta property="og:url" content="https://liam1davis.github.io/Apps/dyslexia-friendly.html">
+<meta property="og:title" content="AI Prompt Builder: ADHD-friendly edition">
+<meta property="og:description" content="Get better results from AI, one short step at a time. Focus mode, a gentle timer and answers you can act on.">
+<meta property="og:url" content="https://liam1davis.github.io/Apps/adhd-friendly.html">
 <meta property="og:image" content="https://liam1davis.github.io/Apps/og-image.png">
-<meta name="theme-color" content="#FBF6EA">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D4F91'/%3E%3Ctext x='32' y='42' font-family='Verdana,Arial,sans-serif' font-size='24' font-weight='700' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#F6F7F9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230F6E68'/%3E%3Ctext x='32' y='42' font-family='Segoe UI,Arial,sans-serif' font-size='24' font-weight='700' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E">
 <style>
 /* ==========================================================================
-   LD AI Prompt Builder: dyslexia-friendly edition
-   Based on the British Dyslexia Association style guide:
-   - off-white / tinted backgrounds, dark grey (not black) text
-   - plain sans-serif, large size, generous letter / word / line spacing
-   - left aligned, short line length, no italics, no ALL CAPS,
-     underline only for links, bold for emphasis
-   Every visual preference is a CSS variable the reader can change.
+   AI Prompt Builder: ADHD-friendly edition
+   Design aims (informed by W3C "Making Content Usable for People with
+   Cognitive and Learning Disabilities" and ADHD UK guidance):
+   - calm, low-clutter screens with ONE obvious next action
+   - short first, detail on request; time estimates everywhere
+   - no animation, no autoplay, no pressure; progress and auto-save
+   - focus mode, an optional gentle timer, and a place to park stray thoughts
    ========================================================================== */
 :root{
-  --font: Verdana, Tahoma, "Segoe UI", Arial, sans-serif;
-  --size: 19px;
-  --lh: 1.65;
-  --ls: .02em;
-  --ws: .08em;
-  --measure: 64ch;
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --size: 18px;
+  --lh: 1.6;
+  --ls: .01em;
+  --ws: .02em;
+  --measure: 66ch;
 
-  --bg:#FBF6EA;        /* cream */
-  --panel:#FFFDF7;
-  --text:#25252B;
-  --muted:#4B4A55;
-  --line:#DCD3C0;
-  --accent:#1D4F91;    /* deep blue: buttons, links */
+  --bg:#F6F7F9;
+  --panel:#FFFFFF;
+  --text:#1E2430;
+  --muted:#4B5565;
+  --line:#DDE2EA;
+  --accent:#0F6E68;      /* calm teal */
   --accent-text:#FFFFFF;
-  --accent-soft:#E3ECF7;
-  --hl:#FFE9A8;        /* highlight: reading ruler, read-aloud, key words */
+  --accent-soft:#E2F2F0;
+  --hl:#FFF1C2;
   --good:#1E6B3A; --good-bg:#E3F2E6;
   --warn:#7A4A00; --warn-bg:#FCEFCF;
   --miss:#9B2C2C; --miss-bg:#F9E3E1;
-  --shadow:0 2px 10px rgba(40,35,20,.08);
+  --shadow:0 1px 6px rgba(20,30,50,.06);
   --radius:14px;
 }
-/* Background tints (chosen in Reading settings) */
-:root[data-tint="blue"]  { --bg:#E8F0F8; --panel:#F6FAFD; --line:#C9D6E4; }
-:root[data-tint="yellow"]{ --bg:#FBF3CF; --panel:#FFFBEA; --line:#E2D59F; }
-:root[data-tint="green"] { --bg:#E7F3E8; --panel:#F6FBF6; --line:#C6DCC8; }
-:root[data-tint="peach"] { --bg:#FBE9DC; --panel:#FFF7F1; --line:#E8CDB8; }
-:root[data-tint="grey"]  { --bg:#ECEBE8; --panel:#F8F7F5; --line:#D2D0CB; }
-:root[data-tint="dark"]{
-  --bg:#1D1C21; --panel:#28262E; --text:#F2E8D0; --muted:#E6D3A3; --line:#45414F;
-  --accent:#E6D3A3; --accent-text:#1D1C21; --accent-soft:#3A3542;
-  --hl:#5A4A1E;
-  --good:#9FD8AE; --good-bg:#23382A; --warn:#F3CF86; --warn-bg:#3E3220; --miss:#F2A7A0; --miss-bg:#43262A;
+:root[data-theme="dark"]{
+  --bg:#15171C; --panel:#1F2229; --text:#ECEEF2; --muted:#E6D3A3; --line:#343944;
+  --accent:#E6D3A3; --accent-text:#15171C; --accent-soft:#2C2F37; --hl:#4A4022;
+  --good:#9FD8AE; --good-bg:#203328; --warn:#F3CF86; --warn-bg:#3A3020; --miss:#F2A7A0; --miss-bg:#3E2528;
   --shadow:none;
 }
-/* Fonts */
-:root[data-font="arial"]   { --font: Arial, Helvetica, sans-serif; }
-:root[data-font="century"] { --font: "Century Gothic", "Apple Gothic", Verdana, sans-serif; }
-:root[data-font="comic"]   { --font: "Comic Sans MS", "Comic Neue", Verdana, sans-serif; }
-:root[data-font="opendys"] { --font: OpenDyslexic, "OpenDyslexic", Verdana, sans-serif; }
-/* Text size */
-:root[data-size="s"] { --size:17px; }
-:root[data-size="l"] { --size:21px; }
-:root[data-size="xl"]{ --size:24px; }
-/* Spacing */
-:root[data-spacing="wide"]  { --lh:1.85; --ls:.05em; --ws:.16em; }
-:root[data-spacing="xwide"] { --lh:2.05; --ls:.09em; --ws:.26em; }
+:root[data-size="s"] { --size:16px; }
+:root[data-size="l"] { --size:20px; }
+:root[data-size="xl"]{ --size:23px; }
+:root[data-font="verdana"]{ --font: Verdana, Tahoma, sans-serif; }
+:root[data-font="arial"]  { --font: Arial, Helvetica, sans-serif; }
 
+/* ---------- Focus mode: only the current task stays visible ---------- */
+:root[data-focus="on"] .nav,
+:root[data-focus="on"] footer,
+:root[data-focus="on"] .side,
+:root[data-focus="on"] .hide-in-focus{display:none !important;}
+:root[data-focus="on"] .workspace{grid-template-columns:minmax(0,1fr);max-width:820px;}
+:root[data-focus="on"] .page{max-width:860px;}
+.focus-banner{display:none;}
+:root[data-focus="on"] .focus-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--accent-soft);border-radius:12px;padding:10px 16px;margin:0 0 18px;font-weight:700;}
+
+/* ---------- Time estimates and "the short version" ---------- */
+.time{display:inline-flex;align-items:center;gap:4px;font-size:.85rem;font-weight:700;color:var(--muted);background:var(--accent-soft);border-radius:999px;padding:2px 10px;}
+.tldr{border:3px solid var(--accent);border-radius:14px;padding:14px 18px;margin:0 0 18px;background:var(--panel);max-width:var(--measure);}
+.tldr .tldr-h{display:block;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.tldr p{margin:0;}
+
+/* ---------- Resume card + quick start ---------- */
+.resume{border-left:8px solid var(--accent);}
+.quick-start .row{align-items:stretch;}
+.quick-start .inp{flex:1;min-width:220px;}
+
+/* ---------- Floating tools: timer + park a thought ---------- */
+.dock{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.dock-card{width:min(340px,calc(100vw - 32px));background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,.14);}
+.dock-card h3{margin:0 0 8px;font-size:1.05rem;}
+.timer-face{font-size:2.2rem;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;margin:4px 0 10px;}
+.timer-pill{font-variant-numeric:tabular-nums;}
+.park-list{list-style:none;padding:0;margin:10px 0 0;max-height:200px;overflow:auto;}
+.park-list li{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;border-bottom:1px solid var(--line);padding:6px 0;margin:0;font-size:.92rem;}
+.park-list button{font:inherit;font-size:.8rem;background:none;border:0;color:var(--muted);cursor:pointer;text-decoration:underline;}
+@media (max-width:600px){ .dock{right:10px;bottom:10px;} }
+
+/* ---------- Gentle "done" moment ---------- */
+.done-note{display:flex;gap:12px;align-items:center;background:var(--good-bg);color:var(--good);border-radius:12px;padding:12px 16px;font-weight:700;margin:0 0 16px;}
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:center;margin:0 0 8px;}
+.checklist .ck{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex:none;}
+.checklist li.on .ck{background:var(--good);border-color:var(--good);color:#fff;}
+.skip-ahead{font:inherit;font-weight:700;background:none;border:0;color:var(--accent);text-decoration:underline;text-underline-offset:.2em;cursor:pointer;padding:8px 4px;min-height:44px;}
+.focus-wrap{max-width:1120px;margin:0 auto;padding:0 18px;}
+:root[data-focus="on"] .focus-banner{margin-top:16px;}
 *{box-sizing:border-box;}
 html{font-size:var(--size);scroll-behavior:smooth;}
 @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;animation:none !important;} }
@@ -171,10 +198,7 @@ a:hover{text-decoration-thickness:3px;}
 .listen.playing{background:var(--hl);border-color:var(--accent);}
 
 /* ---------- Reading ruler ---------- */
-#ruler{position:fixed;left:0;right:0;height:calc(var(--size) * var(--lh) * 1.6);pointer-events:none;z-index:40;
   background:rgba(255,225,120,.28);border-top:2px solid rgba(160,120,0,.45);border-bottom:2px solid rgba(160,120,0,.45);display:none;}
-:root[data-ruler="on"] #ruler{display:block;}
-:root[data-tint="dark"] #ruler{background:rgba(230,211,163,.16);border-color:rgba(230,211,163,.5);}
 
 /* ---------- Reading settings panel ---------- */
 .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:90;display:flex;justify-content:flex-end;}
@@ -343,7 +367,6 @@ footer img{height:48px;width:auto;border-radius:5px;}
 footer p{margin:0;}
 footer .dev-credit{display:flex;align-items:center;gap:8px;}
 
-@media print{ .top,.nav,footer,.listen,.field-tools,#ruler{display:none !important;} }
 .swatch{width:auto;min-width:72px;padding:0 12px;}
 /* On small screens the header scrolls away so it doesn't cover the text. */
 @media (max-width:760px){ .top{position:static;} }
@@ -354,19 +377,22 @@ h1 svg,h2 svg,h3 svg,h4 svg,.go svg,.route svg,p svg,.time svg,.done-note svg,.n
 <a class="skip" href="#view">Skip to the main content</a>
 <header class="top">
   <div class="top-inner">
-    <a class="brand" href="#/" aria-label="AI Prompt Builder, Dyslexia-friendly edition, home page"><span class="brand-mark">AI</span><span>Prompt Builder<small>Dyslexia-friendly edition</small></span></a>
-    <div class="tools" role="group" aria-label="Reading tools">
-      <button type="button" class="btn small quiet" id="listen-page-btn" onclick="listenPage(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg> Listen to this page</button>
-      <button type="button" class="btn small quiet" id="ruler-btn" aria-pressed="false" onclick="toggleRuler()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1"/><path d="M7 9v3M11 9v3M15 9v3M19 9v3"/></svg> Ruler</button>
-      <button type="button" class="btn small" onclick="openSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 9 5h2l5 15"/><path d="M6 15h8"/><path d="M17 9h4"/><path d="M19 7v4"/></svg> Reading settings</button>
+    <a class="brand" href="#/" aria-label="AI Prompt Builder, ADHD-friendly edition, home page"><span class="brand-mark">AI</span><span>Prompt Builder<small>ADHD-friendly edition</small></span></a>
+    <div class="tools" role="group" aria-label="Focus tools">
+      <button type="button" class="btn small quiet" id="focus-btn" aria-pressed="false" onclick="toggleFocus()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span> Focus mode</span></button>
+      <button type="button" class="btn small quiet timer-pill" id="timer-btn" aria-expanded="false" onclick="toggleDock('timer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg> <span class="lbl">Timer</span></button>
+      <button type="button" class="btn small quiet" id="park-btn" aria-expanded="false" onclick="toggleDock('park')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h4"/></svg> <span class="lbl">Park a thought</span></button>
+      <button type="button" class="btn small quiet hide-in-focus" id="listen-page-btn" onclick="listenPage(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg> Listen</button>
+      <button type="button" class="btn small quiet hide-in-focus" onclick="openSettings()">Settings</button>
     </div>
   </div>
   <nav class="nav" id="nav" aria-label="Main"></nav>
 </header>
+<div class="focus-wrap"><div class="focus-banner"><span>Focus mode is on. Just this task for now.</span><button type="button" class="btn small" onclick="toggleFocus()">Turn off</button></div></div>
 <main id="view" tabindex="-1">
   <noscript><div class="page"><h1>Get better results from AI</h1><p>This site needs JavaScript to work.</p></div></noscript>
 </main>
-<div id="ruler" aria-hidden="true"></div>
+<div class="dock" id="dock"></div>
 <div id="settings-host"></div>
 <footer>
   <p><a href="#/">Home</a> · <a href="#/safety">Privacy and safety</a></p>
@@ -375,9 +401,9 @@ h1 svg,h2 svg,h3 svg,h4 svg,.go svg,.route svg,p svg,.time svg,.done-note svg,.n
 </footer>
 <script>
 /* ==========================================================================
-   Dyslexia-friendly edition: core
+   ADHD-friendly edition: core
    Utilities, storage, reading preferences, read-aloud (text to speech),
-   voice typing (speech to text), reading ruler, icons and the router.
+   voice typing (speech to text), icons and the router.
    ========================================================================== */
 function escapeHtml(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function countWords(s){ const t = (s || '').trim(); return t ? t.split(/\s+/).length : 0; }
@@ -391,7 +417,7 @@ function splitLines(s){ return (s || '').split(/\n|;\s+/).map(x => x.replace(/^\
 function nowStamp(){ const n = new Date(); return `${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}, ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
 
 /* ---------- Storage (separate from the main site) ---------- */
-const STORE_KEY = 'ldPromptBuilderDyslexia';
+const STORE_KEY = 'ldPromptBuilderADHD';
 const store = (function(){
   let data = {};
   try { data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}; } catch(e){ data = {}; }
@@ -428,28 +454,27 @@ const ICON_PATHS = {
 function icon(name){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`; }
 
 /* ==========================================================================
-   Reading preferences
+   Preferences: theme, text size, font, focus mode, read-aloud speed
    ========================================================================== */
-const PREF_DEFAULTS = { tint:'cream', font:'verdana', size:'m', spacing:'normal', ruler:'off', rate:'normal' };
+const PREF_DEFAULTS = { theme:'light', font:'system', size:'m', focus:'off', rate:'normal' };
 function prefs(){ return Object.assign({}, PREF_DEFAULTS, store.get('prefs', {})); }
 function applyPrefs(){
   const p = prefs(), r = document.documentElement;
-  r.setAttribute('data-tint', p.tint); r.setAttribute('data-font', p.font);
-  r.setAttribute('data-size', p.size); r.setAttribute('data-spacing', p.spacing);
-  r.setAttribute('data-ruler', p.ruler);
-  const rb = $('ruler-btn'); if (rb){ rb.setAttribute('aria-pressed', String(p.ruler === 'on')); rb.classList.toggle('on', p.ruler === 'on'); }
+  r.setAttribute('data-theme', p.theme); r.setAttribute('data-font', p.font);
+  r.setAttribute('data-size', p.size); r.setAttribute('data-focus', p.focus);
+  const fb = $('focus-btn'); if (fb){ fb.setAttribute('aria-pressed', String(p.focus === 'on')); fb.classList.toggle('on', p.focus === 'on'); fb.lastChild.textContent = p.focus === 'on' ? ' Focus mode: on' : ' Focus mode'; }
 }
 function setPref(k, v){ const p = store.get('prefs', {}); p[k] = v; store.set('prefs', p); applyPrefs(); renderSettings(); }
 applyPrefs();
+function toggleFocus(){ setPref('focus', prefs().focus === 'on' ? 'off' : 'on'); }
 
 const PREF_OPTIONS = {
+  theme:{ title:'Colours', items:[['light','Light'],['dark','Dark']] },
   size:{ title:'Text size', items:[['s','Small'],['m','Medium'],['l','Large'],['xl','Extra large']] },
-  font:{ title:'Font', items:[['verdana','Verdana'],['arial','Arial'],['century','Century Gothic'],['comic','Comic Sans'],['opendys','OpenDyslexic']],
-    note:'OpenDyslexic only works if it is installed on your device. Try a few fonts and keep the one that feels easiest.' },
-  spacing:{ title:'Spacing', items:[['normal','Normal'],['wide','Wide'],['xwide','Extra wide']] },
+  font:{ title:'Font', items:[['system','Standard'],['verdana','Verdana'],['arial','Arial']] },
+  focus:{ title:'Focus mode', items:[['off','Off'],['on','On']], note:'Hides the menu, side panels and footer, so only the task in front of you is on screen.' },
   rate:{ title:'Reading-aloud speed', items:[['slow','Slow'],['normal','Normal'],['fast','Fast']] }
 };
-const TINTS = [['cream','#FBF6EA','Cream'],['blue','#E8F0F8','Blue'],['yellow','#FBF3CF','Yellow'],['green','#E7F3E8','Green'],['peach','#FBE9DC','Peach'],['grey','#ECEBE8','Grey'],['dark','#1D1C21','Dark']];
 let settingsOpen = false, settingsReturn = null;
 function openSettings(){ settingsOpen = true; settingsReturn = document.activeElement; renderSettings(); const c = $('settings-card'); if (c) c.focus(); }
 function closeSettings(){ settingsOpen = false; renderSettings(); if (settingsReturn && settingsReturn.focus) settingsReturn.focus(); }
@@ -460,33 +485,20 @@ function renderSettings(){
   const group = key => {
     const g = PREF_OPTIONS[key];
     return `<div class="set-group" role="group" aria-labelledby="sg-${key}"><h3 id="sg-${key}">${g.title}</h3>
-      <div class="choices">${g.items.map(([v, l]) => `<button type="button" class="choice" aria-pressed="${p[key] === v}" onclick="setPref('${key}','${v}')"${key === 'font' ? ` style="font-family:${({verdana:'Verdana',arial:'Arial',century:'Century Gothic',comic:'Comic Sans MS',opendys:'OpenDyslexic, Verdana'})[v]}"` : ''}>${l}</button>`).join('')}</div>
+      <div class="choices">${g.items.map(([v, l]) => `<button type="button" class="choice" aria-pressed="${p[key] === v}" onclick="setPref('${key}','${v}')">${l}</button>`).join('')}</div>
       ${g.note ? `<p class="small muted" style="margin-top:8px">${g.note}</p>` : ''}</div>`;
   };
   host.innerHTML = `
     <div class="panel-overlay" onclick="if(event.target===this) closeSettings()">
       <div class="settings" id="settings-card" role="dialog" aria-modal="true" aria-labelledby="settings-title" tabindex="-1" onkeydown="if(event.key==='Escape') closeSettings()">
-        <div class="row between" style="margin-bottom:12px"><h2 id="settings-title" style="margin:0">Reading settings</h2><button type="button" class="btn small quiet" onclick="closeSettings()">Close</button></div>
-        <p class="small">Change how the site looks and sounds. Your choices are saved on this device.</p>
-        <div class="set-group" role="group" aria-labelledby="sg-tint"><h3 id="sg-tint">Background colour</h3>
-          <div class="choices">${TINTS.map(([v, c, l]) => `<button type="button" class="swatch" style="background:${c};${v === 'dark' ? 'color:#F2E8D0' : ''}" aria-pressed="${p.tint === v}" aria-label="${l}" title="${l}" onclick="setPref('tint','${v}')">${l}</button>`).join('')}</div>
-        </div>
-        ${group('size')}${group('font')}${group('spacing')}
-        <div class="set-group"><h3>Reading ruler</h3>
-          <div class="choices"><button type="button" class="choice" aria-pressed="${p.ruler === 'on'}" onclick="setPref('ruler','on')">On</button><button type="button" class="choice" aria-pressed="${p.ruler !== 'on'}" onclick="setPref('ruler','off')">Off</button></div>
-          <p class="small muted" style="margin-top:8px">A coloured band follows your mouse or finger to help you keep your place.</p>
-        </div>
-        ${group('rate')}
+        <div class="row between" style="margin-bottom:12px"><h2 id="settings-title" style="margin:0">Settings</h2><button type="button" class="btn small quiet" onclick="closeSettings()">Close</button></div>
+        <p class="small">Saved on this device.</p>
+        ${group('theme')}${group('size')}${group('font')}${group('focus')}${group('rate')}
         <div class="row"><button type="button" class="btn quiet small" onclick="store.set('prefs', {}); applyPrefs(); renderSettings();">Reset to default</button></div>
       </div>
     </div>`;
 }
 
-/* ---------- Reading ruler ---------- */
-function moveRuler(y){ const r = $('ruler'); if (r) r.style.top = (y - r.offsetHeight / 2) + 'px'; }
-document.addEventListener('mousemove', e => { if (prefs().ruler === 'on') moveRuler(e.clientY); });
-document.addEventListener('touchmove', e => { if (prefs().ruler === 'on' && e.touches[0]) moveRuler(e.touches[0].clientY); }, { passive:true });
-function toggleRuler(){ setPref('ruler', prefs().ruler === 'on' ? 'off' : 'on'); }
 
 /* ==========================================================================
    Read aloud (text to speech). Uses the browser's built-in voices.
@@ -622,7 +634,7 @@ function route(){
 }
 window.addEventListener('hashchange', route);
 function go(hash){ if (location.hash === hash) route(); else location.hash = hash; }
-function setTitle(t){ document.title = t ? `${t} · AI Prompt Builder: Dyslexia-friendly edition` : 'AI Prompt Builder: Dyslexia-friendly edition'; }
+function setTitle(t){ document.title = t ? `${t} · AI Prompt Builder: ADHD-friendly edition` : 'AI Prompt Builder: ADHD-friendly edition'; }
 function pageHead(title, lede, opts){
   opts = opts || {};
   return `<h1>${title}</h1>${lede ? `<p class="lede">${lede}</p>` : ''}`;
@@ -1814,7 +1826,7 @@ detectTaskType = t => _detectTaskType(normaliseSpelling(t));
 detectSnippet = (dim, text) => _detectSnippet(dim, normaliseSpelling(text));
 detectRisks = t => _detectRisks(normaliseSpelling(t));
 /* ==========================================================================
-   Plain-English content for the Dyslexia-friendly edition.
+   Plain-English content for the ADHD-friendly edition.
    Writing rules used throughout: short sentences (aim under 15 words),
    one idea per sentence, everyday words, active voice, no double
    negatives, bold for key words, the most important point first.
@@ -1985,19 +1997,19 @@ const D_STEP = {
   requirements:{ title:'What must the answer include?', why:'List the must-haves. Put each one on a new line.', ph:'For example:\nthe date\nthe reason\nwhat happens next' },
   output:{ title:'How should the answer look?', why:'Pick what you want. Tap as many as you like.' },
   success:{ title:'What do you need the answer to do?', why:'Say what the answer should help with.', ph:'For example: My manager can say yes quickly.',
-    chips:['I can use it straight away','It is quick to read','It helps me decide','It persuades the reader','It helps me understand'] },
+    chips:['I can act on it straight away','I know the first step','It is quick to read','It helps me decide','It helps me get started'] },
   constraints:{ title:'Is there anything AI should avoid?', why:'Say what to leave out, or any limits.', ph:'Or type your own',
     chips:['No jargon','No long words','Do not make things up','Only use what I have told you','Keep it under 200 words'] }
 };
-const D_GOAL_STARTERS = ['Write an email to my manager','Explain something I have to read','Make this letter easier to understand','Plan my week','Give me some ideas'];
-const EASY_READ_LINE = 'Make it easy to read: use short sentences and everyday words, put the most important point first, use headings and bullet points, and keep paragraphs short.';
+const D_GOAL_STARTERS = ['Break a big task into small steps','Write an email I have been putting off','Plan my day','Sum up a long document','Help me decide what to do first'];
+const EASY_READ_LINE = 'Make it quick to act on: start with a two or three line summary, then use short numbered steps, put the key actions in bold, and keep it brief. If it is a task, break it into small steps with a rough time for each.';
 /* Short pieces (emails, quick answers, ideas) don't need headings. */
 function easyReadLine(type){
   return ['message','question','ideas'].includes(type)
-    ? 'Make it easy to read: use short sentences and everyday words, and keep paragraphs short.'
+    ? 'Keep it short and get to the point. Put the most important thing first.'
     : EASY_READ_LINE;
 }
-const DYSLEXIA_LINE = 'I have dyslexia, so please keep the layout clear and simple.';
+const DYSLEXIA_LINE = 'I have ADHD, so please keep it focused and easy to act on.';
 
 /* ---------- Review questions ---------- */
 const D_REVIEW = [
@@ -2011,8 +2023,8 @@ const D_REVIEW = [
     cause:'AI cannot include what it does not know you need.', follow:'This is missing [the missing part]. Please add it.' },
   { id:'tone', q:'Is the tone right for the reader?', bad:['no','partly'], dim:'audience', title:'The tone is not right',
     cause:'Tone depends on who will read it. Say who it is for.', follow:'Please rewrite this for [who will read it]. Make it more [friendly / formal / simple].' },
-  { id:'easy', q:'Was it easy for you to read?', bad:['no','partly'], dim:'output', title:'It was hard to read',
-    cause:'You can ask AI to change how it writes. It will happily do this.', follow:'Please rewrite this so it is easy to read. Use short sentences, everyday words, headings and bullet points.' },
+  { id:'easy', q:'Was it short and clear enough to act on?', bad:['no','partly'], dim:'output', title:'Too long or hard to act on',
+    cause:'You can ask AI to cut it down and lead with the action. It will happily do this.', follow:'That is too much. Give me just the key points in 3 to 5 short bullets, then the very first step I should take.' },
   { id:'assume', q:'Did it avoid guessing things you did not say?', bad:['no','partly'], dim:'context', rel:true, title:'It guessed things',
     cause:'AI fills gaps with guesses. Tell it the right facts.', follow:'You guessed [the guess]. That is not right. The fact is [the right fact]. Please change your answer.' },
   { id:'verify', q:'Does anything need checking before you use it?', hint:'For example numbers, names, dates or facts.', bad:['yes','unsure'], dim:null, rel:true, verify:true, title:'Check it before you use it',
@@ -2028,7 +2040,7 @@ const D_LADDER = [
 ];
 const D_LESSON_GROUPS = [
   ['The basics',['what-is-ai','what-is-a-prompt','why-answers-vary']],
-  ['AI and dyslexia',['ai-helper','tell-ai']],
+  ['AI and ADHD',['ai-helper','tell-ai']],
   ['Better prompts',['clear-task','context','audience','requirements','outcome','output','examples']],
   ['Check and improve',['evaluate','improve','accuracy']],
   ['Going further',['when-not','frameworks','advanced']]
@@ -2058,38 +2070,45 @@ const D_LESSONS = {
 <p>Some tools for developers have a setting called <b>temperature</b>. It controls how much the answers change.</p>
 <p>It is a setting, <b>not</b> something you type in a chat.</p>`,
     takeaway:'Different answers are normal. Clear prompts help.' },
-  'ai-helper':{ title:'AI as your reading and writing helper', mins:3, body:`
-<p>AI can be a great helper if reading or writing takes you extra effort.</p>
-<h2>Things you can ask AI to do</h2>
+  'ai-helper':{ title:'AI as your planning partner', mins:3, body:`
+<p>AI is good at the parts of a task that can be hardest to start: <b>breaking it down</b>, <b>putting things in order</b> and <b>writing a first draft</b>.</p>
+<h2>Things to try</h2>
 <ul>
-<li><b>Make a letter simpler:</b> “Explain this letter in simple words. Tell me what I need to do.”</li>
-<li><b>Sum up a long document:</b> “Sum this up in five bullet points.”</li>
-<li><b>Check your spelling:</b> “Correct the spelling and grammar. Do not change my meaning.”</li>
-<li><b>Turn notes into an email:</b> “Turn these notes into a polite email.”</li>
-<li><b>Break a big job into steps:</b> “Break this task into small steps.”</li>
-<li><b>Plan your time:</b> “Help me plan my week. I have these deadlines.”</li>
+<li><b>Break it down:</b> “Break ‘sort out my tax return’ into steps of 10 minutes or less. Number them.”</li>
+<li><b>Just the first step:</b> “I'm stuck on this task. What is the smallest first step I can do in 2 minutes?”</li>
+<li><b>Put things in order:</b> “Here is my to-do list. Sort it by what is most urgent and important. Pick three for today.”</li>
+<li><b>Beat the blank page:</b> “Write a rough first draft of this email. I'll fix it up.”</li>
+<li><b>Plan your time:</b> “I have 2 hours and these tasks. Make a realistic plan with breaks.”</li>
+<li><b>Decide faster:</b> “Help me choose between these two options. Ask me three quick questions, then recommend one.”</li>
+<li><b>Catch up quickly:</b> “Sum up these meeting notes in five bullets. Put my actions at the top.”</li>
 </ul>
-<h2>Good news about spelling</h2>
-<p><b>AI is very good at understanding spelling mistakes.</b> Focus on what you want to say. Do not worry about spelling.</p>
-<h2>Speak instead of typing</h2>
-<p>Many AI apps let you <b>talk</b> instead of type. Look for the microphone button.</p>
-<p>On Windows, press the <b>Windows key + H</b> to type with your voice in most apps.</p>
-<h2>Stay safe</h2>
-<p>Take out names, addresses and account numbers before you paste a letter into AI.</p>
-<p>Always check important numbers, names and dates in AI's answer.</p>`,
-    takeaway:'AI can read, sum up, check and plan with you. You stay in charge, and you check what matters.', tryIt:['#/build','Try it in the builder'] },
-  'tell-ai':{ title:'Tell AI how you like to read', mins:2, body:`
-<p>You can ask AI to write in a way that suits you.</p>
+<h2>What AI can't do</h2>
+<ul>
+<li>Most AI chats <b>cannot remind you</b> later or keep track of time. Use your phone or calendar for reminders.</li>
+<li>AI's time estimates are <b>guesses</b>. Adjust them to how you work.</li>
+<li>Check anything important, like dates, money and names.</li>
+</ul>`,
+    tldr:'Use AI to break tasks down, choose what to do first and get past the blank page. It can\'t remind you later, so pair it with your calendar.',
+    takeaway:'AI is a great planning partner. You stay in charge of what actually gets done.', tryIt:['#/build','Break down a task now'] },
+  'tell-ai':{ title:'Tell AI how you work best', mins:2, body:`
+<p>You can ask AI to give answers in a way that suits how your brain works.</p>
 <p>Add a line like this to your prompt:</p>
-<p class="bubble you">Make it easy to read: use short sentences and everyday words, put the most important point first, use headings and bullet points, and keep paragraphs short.</p>
-<p>The builder on this site can add this line for you. Just tick the box.</p>
+<p class="bubble you">Make it quick to act on: start with a two or three line summary, then use short numbered steps, put the key actions in bold, and keep it brief.</p>
+<p>The builder on this site adds this for you. It's ticked already.</p>
+<h2>Other useful asks</h2>
+<ul>
+<li>“Ask me one question at a time.”</li>
+<li>“Give me only the next step, not the whole plan.”</li>
+<li>“Keep it under 100 words.”</li>
+<li>“If I go off topic, gently bring me back to the task.”</li>
+</ul>
 <h2>Set it once</h2>
-<p>Some AI tools let you save this, so you do not have to type it every time.</p>
 <ul><li>In <b>ChatGPT</b>: look for <b>Customise ChatGPT</b> or <b>Personalisation</b> in settings.</li><li>In <b>Claude</b>: look for <b>Profile preferences</b> in settings.</li><li>In <b>Copilot</b> or <b>Gemini</b>: look for a <b>personalisation</b> or <b>instructions</b> setting.</li></ul>
-<p>Menus change over time. If you cannot find it, ask the AI: “How do I save instructions for every chat?”</p>
-<h2>Do I need to mention dyslexia?</h2>
-<p>No. It is your choice. Asking for easy-to-read writing works either way.</p>`,
-    takeaway:'Ask AI to write the way you like to read. You can save it so it happens every time.' },
+<p>Menus change. If you can't find it, ask the AI: “How do I save instructions for every chat?”</p>
+<h2>Do I need to mention ADHD?</h2>
+<p>No. It's your choice. Asking for short, actionable answers works either way.</p>`,
+    tldr:'Ask AI for short answers with a summary first, numbered steps and the key actions in bold. Save it in settings so it happens every time.',
+    takeaway:'Tell AI how you work best, once, and save it.' },
   'clear-task':{ title:'Say what you want', mins:2, ladder:1, body:`
 <p>Start with what you want AI to <b>do</b>.</p>
 <p>Use an action word: <b>write</b>, <b>explain</b>, <b>sum up</b>, <b>compare</b>, <b>plan</b>.</p>
@@ -2125,7 +2144,7 @@ const D_LESSONS = {
 <ul><li>Say what the example is for: “use the same style”.</li><li>Check the example for private details first.</li></ul>`, takeaway:'Show an example when it is hard to explain.' },
   'evaluate':{ title:'Check the answer', mins:2, ladder:6, body:`
 <p>When AI answers, ask yourself:</p>
-<ul><li>Did it answer my question?</li><li>Did it use my facts?</li><li>Does it look right?</li><li>Is anything missing?</li><li>Is it easy to read?</li><li>Does anything need checking?</li></ul>
+<ul><li>Did it answer my question?</li><li>Did it use my facts?</li><li>Does it look right?</li><li>Is anything missing?</li><li>Is it short enough to act on?</li><li>Does anything need checking?</li></ul>
 <p>Each “no” tells you what to add to your prompt.</p>`, exercise:'verify', takeaway:'A disappointing answer tells you what your prompt was missing.', tryIt:['#/review','Review an answer'] },
   'improve':{ title:'Improve it', mins:2, ladder:7, body:`
 <p>You do not need to start again.</p>
@@ -2155,7 +2174,7 @@ const D_LESSONS = {
 <p>You do not need a framework for most tasks.</p>`, exercise:'role', takeaway:'Frameworks are checklists for you. Use one only when it helps.', tryIt:['#/lab','Explore the Prompt Lab'] },
   'advanced':{ title:'Useful words to know', mins:3, body:`
 <dl class="glossary">
-<dt>Custom instructions</dt><dd>Settings that AI follows in every chat. Good for “make it easy to read”.</dd>
+<dt>Custom instructions</dt><dd>Settings that AI follows in every chat. Good for “keep it short and give me the next step”.</dd>
 <dt>Tokens</dt><dd>Small pieces of text that AI reads. Very long documents may be too big.</dd>
 <dt>Temperature</dt><dd>A developer setting that changes how varied answers are. Not something you type in a chat.</dd>
 <dt>Hallucination</dt><dd>When AI makes something up and sounds sure about it.</dd>
@@ -2195,7 +2214,7 @@ const FW_PLAIN = {
 };
 const D_LEVEL = { beginner:'Good to start with', intermediate:'For decisions and bigger problems', advanced:'Specialist: useful sometimes, not often' };
 /* ==========================================================================
-   Shared components (Dyslexia-friendly edition)
+   Shared components (ADHD-friendly edition)
    ========================================================================== */
 
 /* ---------- Practice questions ---------- */
@@ -2332,7 +2351,7 @@ function gapsHTML(p, base, dims, offerRel){
       <label class="field" for="${p}-g-${d}">${PLAIN_DIMS[d].icon} ${escapeHtml(PLAIN_DIMS[d].q)}<span class="hint">${escapeHtml(PLAIN_DIMS[d].why)}</span></label>
       <textarea class="inp" id="${p}-g-${d}" rows="2" placeholder="${escapeHtml(GAP_PH[d])}" oninput="GAPS['${p}'].vals['${d}']=this.value">${escapeHtml(st.vals[d] || '')}</textarea>
       <div class="field-tools">${micBtn(`${p}-g-${d}`)}</div></div>`).join('')}
-    <label class="toggle-card${st.easy ? ' on' : ''}"><input type="checkbox" ${st.easy ? 'checked' : ''} onchange="GAPS['${p}'].easy=this.checked; this.parentNode.classList.toggle('on', this.checked)"><span><b>Ask AI to make its answer easy to read</b><br><span class="small">Short sentences, everyday words, headings and bullet points.</span></span></label>
+    <label class="toggle-card${st.easy ? ' on' : ''}"><input type="checkbox" ${st.easy ? 'checked' : ''} onchange="GAPS['${p}'].easy=this.checked; this.parentNode.classList.toggle('on', this.checked)"><span><b>Ask AI for a short answer I can act on</b><br><span class="small">A quick summary first, then short numbered steps.</span></span></label>
     ${offerRel ? `<label class="toggle-card${st.rel ? ' on' : ''}"><input type="checkbox" ${st.rel ? 'checked' : ''} onchange="GAPS['${p}'].rel=this.checked; this.parentNode.classList.toggle('on', this.checked)"><span><b>Ask AI to be careful with facts</b><br><span class="small">Suggested because ${escapeHtml(offerRel)}.</span></span></label>` : ''}
     <button type="button" class="btn primary big" onclick="showGaps('${p}')">Improve my prompt</button>
     <div id="${p}-improved" style="margin-top:18px"></div>`;
@@ -2347,7 +2366,7 @@ function showGaps(p){
   if (st.easy) text += '\n\n' + EASY_READ_LINE;
   if (st.rel) text += '\n\nPlease be careful with facts. Do not make things up. If you are not sure about something, say so.';
   const log = added.map(d => `<li><b>We added: ${escapeHtml(PLAIN_DIMS[d].name)}</b><br>${escapeHtml(st.vals[d].trim())}<br><span class="small"><b>Why:</b> ${escapeHtml(PLAIN_DIMS[d].why)}</span></li>`).join('')
-    + (st.easy ? `<li><b>We added: easy-to-read request</b><br><span class="small"><b>Why:</b> AI will write in a way that is easier for you to read.</span></li>` : '')
+    + (st.easy ? `<li><b>We added: short, actionable answer</b><br><span class="small"><b>Why:</b> You get the key points and the next step, without a wall of text.</span></li>` : '')
     + (st.rel ? `<li><b>We added: be careful with facts</b><br><span class="small"><b>Why:</b> It asks AI not to guess. It cannot stop every mistake.</span></li>` : '');
   box.innerHTML = `
     <h2>What we changed</h2>
@@ -2359,40 +2378,148 @@ function showGaps(p){
   scrollToId(p + '-improved');
 }
 /* ==========================================================================
-   HOME
+   ADHD-friendly tools
+   - Focus timer: optional, silent, no pressure. Survives a page reload.
+   - Park a thought: jot down a stray idea without leaving the task.
+   - Pick up where you left off: remembers the last page you were on.
    ========================================================================== */
+Object.assign(ICON_PATHS, {
+  focus:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',
+  timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/>',
+  park:'<path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h4"/>',
+  bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'
+});
+function timeTag(mins){ return `<span class="time">${icon('timer')} ${mins} min</span>`; }
+function tldr(text){ return `<div class="tldr"><span class="tldr-h">The short version</span><p>${text}</p></div>`; }
+function doneNote(text){ return `<div class="done-note" role="status">${icon('tick')} ${text}</div>`; }
+
+/* ---------- Dock (the floating cards) ---------- */
+let dockOpen = null; // 'timer' | 'park' | null
+function toggleDock(which){ dockOpen = dockOpen === which ? null : which; renderDock(); const f = document.querySelector('#dock input, #dock button'); if (dockOpen && f) f.focus(); }
+function renderDock(){
+  const d = $('dock'); if (!d) return;
+  d.innerHTML = dockOpen === 'timer' ? timerCard() : dockOpen === 'park' ? parkCard() : '';
+  updateToolButtons();
+}
+function updateToolButtons(){
+  const tb = $('timer-btn'), pb = $('park-btn');
+  const t = store.get('timer', null);
+  if (tb){
+    const left = t ? Math.max(0, t.end - Date.now()) : 0;
+    tb.querySelector('.lbl').textContent = t && left > 0 ? fmt(left) : 'Timer';
+    tb.classList.toggle('on', !!(t && left > 0)); tb.setAttribute('aria-expanded', String(dockOpen === 'timer'));
+  }
+  if (pb){ const n = store.get('park', []).length; pb.querySelector('.lbl').textContent = n ? `Parked (${n})` : 'Park a thought'; pb.setAttribute('aria-expanded', String(dockOpen === 'park')); }
+}
+
+/* ---------- Focus timer ---------- */
+function fmt(ms){ const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+let timerTick = null;
+function startTimer(mins){ store.set('timer', { end: Date.now() + mins * 60000, mins }); store.set('timerDone', false); runTimer(); renderDock(); }
+function stopTimer(){ store.set('timer', null); store.set('timerDone', false); clearInterval(timerTick); timerTick = null; renderDock(); }
+function runTimer(){
+  clearInterval(timerTick);
+  timerTick = setInterval(() => {
+    const t = store.get('timer', null);
+    if (!t){ clearInterval(timerTick); return; }
+    const left = t.end - Date.now();
+    if (left <= 0){
+      clearInterval(timerTick); store.set('timer', null); store.set('timerDone', true);
+      dockOpen = 'timer'; renderDock();
+      return;
+    }
+    const face = $('timer-face'); if (face) face.textContent = fmt(left);
+    updateToolButtons();
+  }, 1000);
+}
+function timerCard(){
+  const t = store.get('timer', null), done = store.get('timerDone', false);
+  const left = t ? Math.max(0, t.end - Date.now()) : 0;
+  return `<div class="dock-card" role="dialog" aria-label="Focus timer">
+    <div class="row between"><h3>${icon('timer')} Focus timer</h3><button type="button" class="btn small quiet" onclick="toggleDock('timer')">Close</button></div>
+    ${done ? `<p role="status"><b>Time's up. Nice focus.</b> Take a short break, or start another round.</p>` : ''}
+    ${t ? `<div class="timer-face" id="timer-face" aria-live="off">${fmt(left)}</div><p class="small muted">It won't make a sound. Glance at the button at the top to see the time.</p><button type="button" class="btn quiet" onclick="stopTimer()">Stop</button>`
+      : `<p class="small">Pick a short burst of focus. No alarms, no pressure.</p><div class="choices">${[5, 10, 15, 25].map(m => `<button type="button" class="choice" onclick="startTimer(${m})">${m} min</button>`).join('')}</div>`}
+  </div>`;
+}
+if (store.get('timer', null)) runTimer();
+
+/* ---------- Park a thought ---------- */
+function parkAdd(){
+  const i = $('park-in'); const v = (i.value || '').trim(); if (!v) return;
+  const list = store.get('park', []); list.unshift({ t:v, at:Date.now() }); store.set('park', list);
+  renderDock(); const n = $('park-in'); if (n) n.focus();
+  const s = $('park-status'); if (s) s.textContent = 'Parked. Back to your task.';
+}
+function parkDel(i){ const list = store.get('park', []); list.splice(i, 1); store.set('park', list); renderDock(); }
+function parkCard(){
+  const list = store.get('park', []);
+  return `<div class="dock-card" role="dialog" aria-label="Park a thought">
+    <div class="row between"><h3>${icon('park')} Park a thought</h3><button type="button" class="btn small quiet" onclick="toggleDock('park')">Close</button></div>
+    <p class="small">Something popped into your head? Write it here and get back to your task. It'll be here later.</p>
+    <div class="row"><input class="inp" id="park-in" style="flex:1;min-width:0" placeholder="e.g. Reply to Sam about Friday" onkeydown="if(event.key==='Enter') parkAdd()"><button type="button" class="btn primary small" onclick="parkAdd()">Park it</button></div>
+    <p class="small status ok" id="park-status" role="status"></p>
+    ${list.length ? `<ul class="park-list">${list.map((p, i) => `<li><span>${escapeHtml(p.t)}</span><button type="button" onclick="parkDel(${i})" aria-label="Remove ${escapeHtml(p.t)}">Done</button></li>`).join('')}</ul>
+      <button type="button" class="btn small quiet" style="margin-top:8px" onclick="copyText(store.get('park',[]).map(p=>'- '+p.t).join('\\n')).then(()=>flash(this,'Copied'))">${icon('copy')} Copy list</button>` : ''}
+  </div>`;
+}
+
+/* ---------- Pick up where you left off ---------- */
+const PLACE_NAMES = { start:'Start here', build:'Building a prompt', check:'Checking a prompt', review:'Reviewing an answer', lab:'Prompt Lab', learn:'Learn', safety:'Staying safe' };
+window.addEventListener('hashchange', () => {
+  const h = location.hash || '';
+  const name = h.replace(/^#\//, '').split('/')[0];
+  if (name && PLACE_NAMES[name]) store.set('last', { hash:h, name, at:Date.now() });
+});
+function resumeCard(){
+  const last = store.get('last', null);
+  if (!last || Date.now() - last.at > 1000 * 60 * 60 * 24 * 30) return '';
+  let label = PLACE_NAMES[last.name] || 'where you were';
+  const sub = last.hash.split('/')[2];
+  if (last.name === 'learn' && sub && D_LESSONS[sub]) label = 'Lesson: ' + D_LESSONS[sub].title;
+  if (last.name === 'lab' && sub && FRAMEWORKS[sub]) label = 'Prompt Lab: ' + FRAMEWORKS[sub].name;
+  if (last.name === 'build' && getB().goal.trim()) label = 'Your prompt: “' + getB().goal.trim().slice(0, 60) + (getB().goal.length > 60 ? '…' : '') + '”';
+  return `<div class="card resume"><div class="row between"><div><p class="muted small" style="margin:0">Pick up where you left off</p><p style="margin:0"><b>${escapeHtml(label)}</b></p></div><a class="btn primary" href="${escapeHtml(last.hash)}">Continue ${icon('arrow')}</a></div></div>`;
+}
+/* ==========================================================================
+   HOME: get started in seconds
+   ========================================================================== */
+function quickStart(){
+  const v = ($('qs-goal').value || '').trim();
+  if (!v){ $('qs-goal').focus(); return; }
+  const keep = getB();
+  saveB(Object.assign({}, B_DEFAULT, { goal:v, easyRead:keep.easyRead, mentionDys:keep.mentionDys }));
+  store.set('gStep', 'goal'); store.set('bMode', 'guided');
+  go('#/build');
+}
 defineRoute('home', view => {
   setTitle(null);
   view.innerHTML = `<div class="page">
-    ${pageHead('Get better results from AI', 'Learn how to ask AI for what you need.')}
-    <p class="lede"><b>You do not need to be good at spelling. You do not need to be technical.</b> We will show you how, one step at a time.</p>
-    <div class="row" style="margin:22px 0 30px">
-      <a class="btn primary big" href="#/start">${icon('start')} Start here</a>
-      <button type="button" class="btn big quiet" onclick="openSettings()">${icon('settings')} Change how this site looks</button>
+    ${pageHead('Get better results from AI', 'Short steps. One thing at a time. Answers you can act on.')}
+    ${resumeCard()}
+    <div class="card quick-start">
+      <h2 style="margin-top:0">${icon('bolt')} Got a task right now?</h2>
+      <p>Type it roughly. We'll help you turn it into a good prompt in about 2 minutes.</p>
+      <div class="row"><label class="sr-only" for="qs-goal">Your task</label><input class="inp" id="qs-goal" placeholder="e.g. write the email I've been putting off" onkeydown="if(event.key==='Enter') quickStart()"><button type="button" class="btn primary big" onclick="quickStart()">Go ${icon('arrow')}</button></div>
+      <div class="field-tools">${micBtn('qs-goal')}</div>
     </div>
 
-    <h2>Where would you like to begin?</h2>
+    <h2>Or choose a path</h2>
     <div class="grid">
-      <a class="card route" href="#/start"><span class="tag">New to AI?</span><h3>${icon('start')} See how it works</h3><p>A short, guided example. About 5 minutes.</p><span class="go">Start here →</span></a>
-      <a class="card route" href="#/build"><span class="tag">Already use AI?</span><h3>${icon('build')} Build a prompt</h3><p>Answer a few easy questions. We write the prompt with you.</p><span class="go">Build a prompt →</span></a>
-      <a class="card route" href="#/lab"><span class="tag">Want to learn more?</span><h3>${icon('lab')} Prompt Lab</h3><p>Try ready-made structures for bigger tasks.</p><span class="go">Open the Prompt Lab →</span></a>
+      <a class="card route" href="#/start"><span class="tag">New to AI?</span><h3>${icon('start')} See how it works</h3><p>A quick guided example.</p>${timeTag(5)}</a>
+      <a class="card route" href="#/build/quick"><span class="tag">Already use AI?</span><h3>${icon('build')} Quick builder</h3><p>Everything on one page. Fast.</p>${timeTag(2)}</a>
+      <a class="card route" href="#/lab"><span class="tag">Want more?</span><h3>${icon('lab')} Prompt Lab</h3><p>Structures for bigger tasks.</p>${timeTag(5)}</a>
     </div>
 
-    <h2>The one big idea</h2>
-    <p class="big-idea">The more useful information you give AI, the more useful its answer will be.</p>
+    <p class="big-idea">The one big idea: the more useful information you give AI, the more useful its answer will be.</p>
 
+    <h2>Tools to help you focus</h2>
     <div class="grid">
-      <div class="card"><h3>✍️ Spelling does not matter</h3><p>AI is very good at understanding spelling mistakes. Focus on what you want to say.</p></div>
-      <div class="card"><h3>🎤 Talk instead of typing</h3><p>Look for the <b>Speak instead</b> button next to boxes. Or press <b>Windows key + H</b> on a Windows computer.</p></div>
-      <div class="card"><h3>🔊 Listen to any page</h3><p>Press <b>Listen</b> to hear the text read aloud. The part being read is highlighted.</p></div>
+      <div class="card"><h3>${icon('focus')} Focus mode</h3><p>Hides everything except the task in front of you. Use the button at the top.</p></div>
+      <div class="card"><h3>${icon('timer')} Focus timer</h3><p>Optional 5 to 25 minute bursts. Silent. No pressure.</p></div>
+      <div class="card"><h3>${icon('park')} Park a thought</h3><p>Had an idea about something else? Jot it down and carry on. It'll be saved.</p></div>
     </div>
-
-    <div class="card">
-      <h2 style="margin-top:0">Make this site work for you</h2>
-      <p>You can change the text size, font, spacing and background colour. You can also turn on a reading ruler.</p>
-      <button type="button" class="btn primary" onclick="openSettings()">${icon('settings')} Open reading settings</button>
-    </div>
-    <div class="note"><span class="icon">${icon('lock')}</span><p><b>Private:</b> what you type stays on this device. Nothing is sent to us. <a href="#/safety">Read about staying safe</a>.</p></div>
+    <div class="note"><span class="icon">${icon('lock')}</span><p><b>Private:</b> what you type stays on this device, and your progress is saved as you go. <a href="#/safety">Staying safe</a>.</p></div>
   </div>`;
 });
 
@@ -2405,7 +2532,7 @@ function renderStart(){
   const view = $('view'); const step = store.get('sStep', 0), max = store.get('sMax', 0);
   const bar = D_START.map((s, i) => `<li><button type="button" class="${i === step ? 'now' : i <= max ? 'done' : ''}" ${i <= max ? '' : 'disabled'} onclick="sGo(${i})" ${i === step ? 'aria-current="step"' : ''}>${i < max && i !== step ? '✓' : i + 1}. ${s}</button></li>`).join('');
   view.innerHTML = `<div class="page narrow">
-    <p class="muted" style="margin:0 0 6px">Start here · Step ${step + 1} of ${D_START.length}</p>
+    <p class="muted" style="margin:0 0 6px">Start here · Step ${step + 1} of ${D_START.length} · about ${Math.max(1, 5 - step)} min left</p>
     <div class="progress" aria-hidden="true"><span style="width:${(step + 1) / D_START.length * 100}%"></span></div>
     <ol class="steps" aria-label="Steps">${bar}</ol>
     ${[sDemo, sWhy, sChanged, sPractise, sDone][step]()}
@@ -2493,7 +2620,7 @@ function sPractise(){
 }
 function sDone(){
   return `
-    ${pageHead('Well done!', 'You now know the most important things about asking AI.')}
+    ${pageHead('Done!', 'That is the most important part of using AI well.')}${doneNote('Start here: complete')}
     <div class="card">
       <h2 style="margin-top:0">What you learned</h2>
       <ul>
@@ -2529,7 +2656,7 @@ function bComputed(){
   const S = getB(), E = bEngineState(S), type = E.type;
   const ev = evaluateFields(E), rel = decideReliability(E, type, S.relMode), prompt = assemblePrompt(E, rel);
   const all = ['goal','context','audience','requirements','outText','success','constraints','role','example'].map(k => S[k]).join('\n');
-  const details = [['Built with', store.get('bMode','guided') === 'quick' ? 'Quick builder' : 'Guided builder'], ['Type of task', TASK_TYPES[type].name], ['Is it ready?', `${VERDICT_PLAIN[ev.verdict]} (${ev.keyGood} of ${ev.keyCount})`], ['Safety rules', REL_NAME[rel.level]], ['Easy-to-read answer', S.easyRead ? 'Asked for' : 'Not asked for']];
+  const details = [['Built with', store.get('bMode','guided') === 'quick' ? 'Quick builder' : 'Guided builder'], ['Type of task', TASK_TYPES[type].name], ['Is it ready?', `${VERDICT_PLAIN[ev.verdict]} (${ev.keyGood} of ${ev.keyCount})`], ['Safety rules', REL_NAME[rel.level]], ['Short, actionable answer', S.easyRead ? 'Asked for' : 'Not asked for']];
   return { S, type, ev, rel, prompt, details, privacy:findPrivacyIssues(all), temp:TYPE_TEMPERATURE[type] };
 }
 function bRefresh(){
@@ -2590,8 +2717,8 @@ function fieldHTML(dim, S, labelId){
   const c = Object.assign({}, D_STEP[dim], (D_STEP[dim].byType || {})[type] || {});
   if (dim === 'output'){
     return Object.keys(OUTPUT_CHIPS).map(g => `<span class="chip-label">${escapeHtml(OUTPUT_CHIPS[g].label)}</span><div class="chips" role="group" aria-label="${escapeHtml(OUTPUT_CHIPS[g].label)}">${Object.keys(OUTPUT_CHIPS[g].items).map(k => `<button type="button" class="chip" data-chip="${k}" aria-pressed="${S.outChips.includes(k)}" onclick="bChip('${k}')">${escapeHtml(OUTPUT_CHIPS[g].items[k])}</button>`).join('')}</div>`).join('')
-      + `<label class="toggle-card${S.easyRead ? ' on' : ''}" style="margin-top:16px"><input type="checkbox" ${S.easyRead ? 'checked' : ''} onchange="bToggle('easyRead')"><span><b>Make AI's answer easy to read</b><br><span class="small">Adds: “${escapeHtml(easyReadLine(bTypeOf(S)))}”</span></span></label>`
-      + (S.easyRead ? `<label class="toggle-card${S.mentionDys ? ' on' : ''}"><input type="checkbox" ${S.mentionDys ? 'checked' : ''} onchange="bToggle('mentionDys')"><span><b>Also mention that I have dyslexia</b> <span class="tag">Optional</span><br><span class="small">This is your choice. The “easy to read” line works without it.</span></span></label>` : '')
+      + `<label class="toggle-card${S.easyRead ? ' on' : ''}" style="margin-top:16px"><input type="checkbox" ${S.easyRead ? 'checked' : ''} onchange="bToggle('easyRead')"><span><b>Make AI's answer short and easy to act on</b><br><span class="small">Adds: “${escapeHtml(easyReadLine(bTypeOf(S)))}”</span></span></label>`
+      + (S.easyRead ? `<label class="toggle-card${S.mentionDys ? ' on' : ''}"><input type="checkbox" ${S.mentionDys ? 'checked' : ''} onchange="bToggle('mentionDys')"><span><b>Also mention that I have ADHD</b> <span class="tag">Optional</span><br><span class="small">This is your choice. The line above works without it.</span></span></label>` : '')
       + `<label class="field" for="b-f-outText" style="margin-top:12px">Anything else about how it looks? <span class="tag">Optional</span></label>
          <input type="text" class="inp" id="b-f-outText" value="${escapeHtml(S.outText)}" placeholder="For example: start with a one-line summary" oninput="bSet('outText', this.value)">
          <div class="field-tools">${micBtn('b-f-outText')}</div>`;
@@ -2603,7 +2730,9 @@ function fieldHTML(dim, S, labelId){
 }
 
 /* ---------- Guided ---------- */
-function gSteps(S){ const rel = TASK_TYPES[bTypeOf(S)].rel; return ['goal'].concat(DIM_ORDER.filter(d => d !== 'goal' && rel[d] !== 'skip'), ['done']); }
+/* ADHD edition: only the essential questions on the way through. Optional ones wait at the end. */
+function gSteps(S){ const rel = TASK_TYPES[bTypeOf(S)].rel; return ['goal'].concat(DIM_ORDER.filter(d => d !== 'goal' && rel[d] === 'key'), ['done']); }
+function gOptional(S){ const rel = TASK_TYPES[bTypeOf(S)].rel; return DIM_ORDER.filter(d => d !== 'goal' && rel[d] === 'opt'); }
 function gCur(S){ const s = store.get('gStep','goal'); return gSteps(S).includes(s) ? s : 'goal'; }
 function gGo(s){
   const S = getB();
@@ -2623,7 +2752,7 @@ function guidedHTML(S){
   const optional = step !== 'goal' && TASK_TYPES[type].rel[step] !== 'key';
   return `
     <section class="card" id="g-card">
-      <p class="q-num">Question ${i + 1} of ${steps.length - 1} ${optional ? '<span class="tag">Optional</span>' : ''}</p>
+      <p class="q-num">Question ${i + 1} of ${steps.length - 1} · about ${Math.max(1, Math.ceil((steps.length - 1 - i) / 2))} min left ${optional ? '<span class="tag">Optional</span>' : ''}</p>
       <h2 class="q-title" id="q-title">${PLAIN_DIMS[step].icon} ${escapeHtml(c.title)}</h2>
       <div class="why"><p>${c.why}</p></div>
       <div class="row" style="margin-bottom:12px">${listenBtn('g-card', 'Listen to the question')}</div>
@@ -2632,19 +2761,20 @@ function guidedHTML(S){
       ${step === 'goal' ? `<p class="status err" id="b-goal-err" hidden>Please say what you want AI to do first.</p>
         <p id="b-detect" style="margin-top:14px">${detectNote(S)}</p>
         ${store.get('bTypes', false) ? `<div class="type-grid" role="group" aria-label="Type of task">${TASK_ORDER.map(t => `<button type="button" class="type-btn" aria-pressed="${t === type}" onclick="bPickType('${t}')"><span class="ti" aria-hidden="true">${PLAIN_TYPES[t][0]}</span>${escapeHtml(TASK_TYPES[t].name)}</button>`).join('')}</div>` : ''}
-        <p class="small muted">Do not worry about spelling. AI understands spelling mistakes.</p>` : ''}
+        <p class="small muted">Don't worry about getting it perfect. Rough is fine. You can add more in a moment.</p>` : ''}
       <div id="b-priv"></div>
       <div class="nav-row">
         ${i > 0 ? `<button type="button" class="btn quiet" onclick="gMove(-1)">${icon('back')} Back</button>` : '<span></span>'}
         <div class="row">${step !== 'goal' ? `<button type="button" class="btn quiet" onclick="gMove(1)">Skip</button>` : ''}<button type="button" class="btn primary big" onclick="gMove(1)">${i === steps.length - 2 ? 'See my prompt' : 'Next'} ${icon('arrow')}</button></div>
       </div>
+      ${S.goal.trim() ? `<p style="margin:12px 0 0;text-align:right"><button type="button" class="skip-ahead" onclick="gGo('done')">Skip the rest and show me my prompt</button></p>` : ''}
     </section>`;
 }
 function guidedDone(S){
   const c = bComputed();
   const good = c.ev.items.filter(i => i.status === 'good');
   return `
-    <h2 id="q-title" style="margin-top:0">🎉 Your prompt is ready</h2>
+    <h2 id="q-title" style="margin-top:0">Your prompt is ready</h2>${doneNote('Prompt built')}
     ${outputHTML('b', { saveFn:'bSave()', extra:`<button type="button" class="btn quiet" onclick="gGo('goal')">Change my answers</button>` })}
     <div class="card">
       <h2 style="margin-top:0">Now try it</h2>
@@ -2652,6 +2782,7 @@ function guidedDone(S){
       <button type="button" class="btn primary" onclick="bReview()">${icon('review')} I have an answer. Check it with me</button>
     </div>
     ${good.length ? `<div class="card" id="b-learnt"><div class="card-head"><h2>What made it work</h2>${listenBtn('b-learnt','Listen')}</div><p>Use these habits every time you ask AI.</p><ul>${good.map(i => `<li><b>${PLAIN_DIMS[i.dim].icon} ${escapeHtml(PLAIN_DIMS[i.dim].name)}:</b> ${escapeHtml(PLAIN_DIMS[i.dim].good)}</li>`).join('')}</ul></div>` : ''}
+    ${gOptional(S).length ? `<details class="more"><summary>Add more detail (optional)</summary><p class="small">Only if it would help. Your prompt updates as you type.</p>${gOptional(S).map(d => `<div style="margin-bottom:18px"><label class="field" id="opt-${d}" for="b-f-${d}">${PLAIN_DIMS[d].icon} ${escapeHtml(PLAIN_DIMS[d].q)}</label>${fieldHTML(d, S, 'opt-' + d)}</div>`).join('')}</details>` : ''}
     <details class="more"><summary>Extras: give AI a role or an example (optional)</summary>${extrasHTML(S)}</details>
     <div class="row between"><button type="button" class="btn quiet" onclick="gMove(-1)">${icon('back')} Back</button><button type="button" class="btn quiet" onclick="bNew(this)">Start a new prompt</button></div>`;
 }
@@ -2728,7 +2859,7 @@ defineRoute('check', view => {
   setTitle('Check my prompt');
   view.innerHTML = `<div class="page narrow">
     ${pageHead('Check my prompt', 'Write a request for AI in your own words. We will tell you what is good and what is missing.')}
-    <div class="note"><span class="icon">${icon('bulb')}</span><p><b>Tip:</b> try writing it yourself first. It is the best way to get good at this. Spelling does not matter.</p></div>
+    <div class="note"><span class="icon">${icon('bulb')}</span><p><b>Tip:</b> try writing it yourself first. Rough is fine. It is the best way to get good at this.</p></div>
     <div class="card">
       <label class="field" for="ck-text">Your request</label>
       <textarea class="inp" id="ck-text" rows="6" placeholder="For example: Write me an email asking my manager if I can work from home." oninput="store.set('ckText', this.value)">${escapeHtml(store.get('ckText', ''))}</textarea>
@@ -2797,7 +2928,7 @@ defineRoute('review', view => {
   </div>`;
 });
 /* ==========================================================================
-   PROMPT LAB (Dyslexia-friendly edition): plain guides to each framework + try it
+   PROMPT LAB (ADHD-friendly edition): plain guides to each framework + try it
    ========================================================================== */
 const FW_ORDER = Object.keys(FRAMEWORKS);
 function labRec(){
@@ -2862,7 +2993,7 @@ function labPage(view, id){
   setTitle(fw.name + ' · Prompt Lab');
   view.innerHTML = `<div class="page">
     <p><a href="#/lab">${icon('back')} All frameworks</a></p>
-    ${pageHead(escapeHtml(fw.name), escapeHtml(P.what))}
+    ${pageHead(escapeHtml(fw.name))}${tldr(escapeHtml(P.what) + ' Good for: ' + escapeHtml(P.use[0].toLowerCase()) + '.')}
     <p><span class="tag">${escapeHtml(t.level)}</span> <span class="muted">${escapeHtml(fw.stageLine)}</span></p>
     ${P.caution ? `<div class="note warnbox"><span class="icon">${icon('bulb')}</span><p><b>Good to know:</b> ${escapeHtml(P.caution)}</p></div>` : ''}
     <div class="grid">
@@ -2883,7 +3014,7 @@ function labPage(view, id){
       <label class="field" for="lab-f-${i}">${i + 1}. ${escapeHtml(f.label)}<span class="hint">${escapeHtml(P.parts[i] || f.help)}</span></label>
       <textarea class="inp" id="lab-f-${i}" rows="2" placeholder="${escapeHtml(f.placeholder.replace(/^e\.g\. /, 'For example: '))}" oninput="labIn(${i}, this.value)">${escapeHtml(v[i])}</textarea>
       <div class="field-tools">${micBtn('lab-f-' + i)}</div></div>`).join('')}
-    <label class="toggle-card${store.get('labEasy', true) ? ' on' : ''}"><input type="checkbox" ${store.get('labEasy', true) ? 'checked' : ''} onchange="store.set('labEasy', this.checked); this.parentNode.classList.toggle('on', this.checked); labRefresh()"><span><b>Make AI's answer easy to read</b></span></label>
+    <label class="toggle-card${store.get('labEasy', true) ? ' on' : ''}"><input type="checkbox" ${store.get('labEasy', true) ? 'checked' : ''} onchange="store.set('labEasy', this.checked); this.parentNode.classList.toggle('on', this.checked); labRefresh()"><span><b>Make AI's answer short and easy to act on</b></span></label>
     ${outputHTML('lab', { saveFn:'labSave()', empty:'Fill in the parts above. Your prompt will appear here.', extra:`<button type="button" class="btn quiet" onclick="const c=labComputed(); store.set('rvPrompt', c.prompt); store.set('rv',{}); go('#/review')">${icon('review')} Check the answer</button>` })}
   </div>`;
   labRefresh();
@@ -2898,7 +3029,7 @@ defineRoute('learn', (view, id) => {
   setTitle('Learn');
   const done = lDone();
   view.innerHTML = `<div class="page">
-    ${pageHead('Learn', 'Short lessons. A few minutes each. Pick any one. None of them are compulsory.')}
+    ${pageHead('Learn', 'Short lessons. Each one starts with the short version. Open the detail only if you want it.')}
     <div class="grid" style="align-items:start">
       <section>
         <h2 style="margin-top:0">The Prompt Ladder</h2>
@@ -2924,10 +3055,11 @@ function lessonPage(view, id){
     <p><a href="#/learn">${icon('back')} All lessons</a></p>
     <p class="muted" style="margin:0">${L.ladder ? `Prompt Ladder step ${L.ladder} · ` : ''}${L.mins} minutes</p>
     ${pageHead(escapeHtml(L.title))}
-    <article id="lesson-body">${L.body}</article>
+    ${tldr(escapeHtml(L.tldr || L.takeaway))}${timeTag(L.mins)}
+    <details class="more" style="margin-top:16px" ${store.get('openDetail', false) ? 'open' : ''} ontoggle="store.set('openDetail', this.open)"><summary>More detail</summary><article id="lesson-body">${L.body}</article></details>
     ${L.exercise ? `<div class="card" style="margin-top:20px"><p class="tag" style="margin-bottom:12px">Try it</p>${quizHTML(L.exercise)}</div>` : ''}
     ${L.classify ? classifyHTML() : ''}
-    <div class="takeaway"><p>⭐ ${escapeHtml(L.takeaway)}</p></div>
+    ${L.tldr ? `<div class="takeaway"><p>⭐ ${escapeHtml(L.takeaway)}</p></div>` : ''}
     ${L.tryIt ? `<p><a class="btn primary" href="${L.tryIt[0]}">${escapeHtml(L.tryIt[1])} ${icon('arrow')}</a></p>` : ''}
     <div class="nav-row">
       ${prev ? `<a class="btn quiet" href="#/learn/${prev}">${icon('back')} Previous</a>` : '<span></span>'}
@@ -2982,7 +3114,7 @@ defineRoute('safety', view => {
       <p class="bubble you" style="border-color:var(--good)"><span class="who">After</span>Reply to [CLIENT] at [COMPANY] about a late invoice for [AMOUNT].</p>
       <p>The builder spots things like email addresses and phone numbers. It can swap them for you.</p></div>
     <div class="card"><h2 style="margin-top:0">✅ Check before you trust it</h2><p>AI can be wrong and still sound sure. Check numbers, names, dates and facts before you use them. <a href="#/learn/accuracy">Learn how</a>.</p></div>
-    <div class="card"><h2 style="margin-top:0">Delete my data</h2><p>This removes everything this site has saved on this device, including your reading settings.</p>
+    <div class="card"><h2 style="margin-top:0">Delete my data</h2><p>This removes everything this site has saved on this device, including your settings and parked thoughts.</p>
       <button type="button" class="btn" onclick="if(this.dataset.sure){ store.clearAll(); applyPrefs(); this.textContent='Done. Everything is deleted'; this.disabled=true; } else { this.dataset.sure=1; this.textContent='Are you sure? Click again to delete'; }">Delete everything saved here</button></div>
   </div>`;
 });
