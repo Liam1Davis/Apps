@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LD AI Prompt Builder · Prompt Lab</title>
+<link rel="canonical" href="https://liam1davis.github.io/Apps/index.html#/lab">
+<meta name="robots" content="noindex, follow">
+<!-- v1 "Frameworks Studio" is now the Prompt Lab in index.html.
+     experienced-user.html#race -> index.html#/lab/race, etc. -->
+<script>
+  (function(){
+    var h = location.hash.replace('#','');
+    var known = ['rise','race','cot','tot','react','selfconsistency','leasttomost'];
+    location.replace('index.html#/lab' + (known.indexOf(h) > -1 ? '/' + h : ''));
+  })();
+</script>
+<meta http-equiv="refresh" content="0; url=index.html#/lab">
+</head>
+<body>
+<p>This page has moved. <a href="index.html#/lab">Continue to the Prompt Lab</a></p>
+</body>
+</html>
