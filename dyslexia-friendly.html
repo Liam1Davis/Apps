@@ -418,6 +418,30 @@ mark.hl-key{background:var(--hl);color:inherit;padding:0 .25em;border-radius:4px
   .fb-open{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;}
   .footer-links .fb-open{color:var(--muted);}
   .fb-open:hover{color:var(--accent);}
+  /* Always-visible tab on the right edge, half-way down the screen */
+  .fb-tab{
+    position:fixed;right:0;top:50%;z-index:55;transform:translateY(-50%);
+    writing-mode:vertical-rl;transform-origin:center;
+    display:flex;align-items:center;gap:8px;
+    padding:14px 9px;border:0;border-radius:10px 0 0 10px;cursor:pointer;
+    background:var(--accent, #4F46E5);color:#fff;
+    font:inherit;font-family:var(--font, inherit);font-weight:700;font-size:.95rem;letter-spacing:.03em;
+    box-shadow:-2px 2px 12px rgba(0,0,0,.25);
+    transition:padding .15s ease;
+  }
+  .fb-tab .fb-tab-icon{writing-mode:horizontal-tb;font-size:1.05rem;line-height:1;}
+  .fb-tab:hover{padding-right:13px;}
+  .fb-tab:focus-visible{outline:3px solid var(--focus-ring, #fff);outline-offset:-5px;}
+  /* On phones the side tab would cover text, so a header button is used instead */
+  .fb-head-btn{
+    display:none;flex:0 0 auto;align-items:center;justify-content:center;
+    width:44px;height:44px;padding:0;border-radius:999px;cursor:pointer;
+    border:1px solid var(--border, var(--line, #ccc));background:var(--btn-secondary-bg, var(--panel, transparent));
+    color:var(--text, inherit);font-size:1.15rem;line-height:1;
+  }
+  .fb-head-btn:focus-visible{outline:3px solid var(--focus-ring, var(--accent, #4F46E5));outline-offset:2px;}
+  @media (max-width:600px){ .fb-tab{display:none;} .fb-head-btn{display:inline-flex;} }
+  @media print{ .fb-tab, .fb-head-btn{display:none;} }
   .fb-dialog{
     width:min(520px, calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;
     padding:0;border:1px solid var(--border, var(--line, #ccc));border-radius:var(--radius-lg, var(--radius, 14px));
@@ -516,6 +540,42 @@ mark.hl-key{background:var(--hl);color:inherit;padding:0 .25em;border-radius:4px
   var status = document.getElementById('fb-status');
   var send = document.getElementById('fb-send');
   var openedAt = 0;
+
+  // The side tab is added straight to <body> so nothing in the footer can
+  // affect its fixed position. "hide-in-focus" hides it in ADHD focus mode.
+  var tab = document.createElement('button');
+  tab.type = 'button';
+  tab.className = 'fb-tab hide-in-focus';
+  tab.innerHTML = '<span class="fb-tab-icon" aria-hidden="true">💬</span>Feedback';
+  tab.addEventListener('click', function(){ window.openFeedback(); });
+  document.body.appendChild(tab);
+
+  // Phone-size header button, placed just after the Menu button.
+  var menuBtn = document.getElementById('menu-btn');
+  if (menuBtn){
+    var hb = document.createElement('button');
+    hb.type = 'button';
+    hb.className = 'fb-head-btn hide-in-focus';
+    hb.setAttribute('aria-label', 'Give feedback');
+    hb.title = 'Give feedback';
+    hb.innerHTML = '<span aria-hidden="true">💬</span>';
+    hb.addEventListener('click', function(){ window.openFeedback(); });
+    // Beside Menu if it fits; otherwise at the end of the header's tool
+    // buttons. Re-checked once fonts have loaded and when the size changes.
+    var tools = document.querySelector('header .tools');
+    var placeHeadBtn = function(){
+      menuBtn.parentNode.insertBefore(hb, menuBtn.nextSibling);
+      if (tools && getComputedStyle(hb).display !== 'none' &&
+          Math.abs(hb.getBoundingClientRect().top - menuBtn.getBoundingClientRect().top) > 20){
+        tools.appendChild(hb);
+      }
+    };
+    placeHeadBtn();
+    window.addEventListener('load', placeHeadBtn);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeHeadBtn);
+    var rt;
+    window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(placeHeadBtn, 150); });
+  }
 
   function edition(){
     var p = location.pathname.toLowerCase();
