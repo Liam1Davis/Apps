@@ -603,7 +603,9 @@ mark.hl-key{background:var(--hl);color:inherit;padding:0 .25em;border-radius:4px
 
   function edition(){
     var p = location.pathname.toLowerCase();
-    return p.indexOf('adhd') >= 0 ? 'ADHD-friendly' : p.indexOf('dyslexia') >= 0 ? 'Dyslexia-friendly' : 'Standard';
+    var ed = p.indexOf('adhd') >= 0 ? 'ADHD-friendly' : p.indexOf('dyslexia') >= 0 ? 'Dyslexia-friendly' : 'Standard';
+    var lang = (document.documentElement.lang || 'en').slice(0, 2).toLowerCase();
+    return lang === 'en' ? ed : ed + ' · ' + lang;
   }
   function pageLabel(){
     var h = location.hash || '#/';
@@ -1021,7 +1023,7 @@ const TASK_TYPES = {
 };
 const TASK_ORDER = ['question','message','document','explain','summarise','ideas','analyse','plan','other'];
 
-const TYPE_PATTERNS = [
+let TYPE_PATTERNS = [
   ['summarise', /\b(summari[sz]e|summary|rewrite|re-write|rephrase|shorten|proof-?read|tidy up|translate|simplify|condense|tl;?dr)\b/i],
   ['message',   /\b(e-?mails?|messages?|reply|respond to|letter|text to|whatsapp|linkedin post|tweet|post for|invitation|invite|thank[- ]you|cover letter|announcement)\b/i],
   ['document',  /\b(report|essay|article|blog|proposal|policy|document|guide|handbook|presentation|slides|newsletter|cv|résumé|resume|job (description|advert)|press release|briefing|case study|lesson plan|speech)\b/i],
@@ -1044,14 +1046,14 @@ function detectTaskType(text){
 }
 
 /* High-stakes topics get task-specific quality controls. */
-const RISK_PATTERNS = {
+let RISK_PATTERNS = {
   health:    /\b(medical|medicine|medication|symptoms?|diagnos\w*|health|illness|disease|dose|dosage|pregnan\w*|mental health|treatment|nhs|gp)\b/i,
   legal:     /\b(legal|law|laws|lawyer|solicitor|contract|lease|tenancy|court|tribunal|lawsuit|liability|immigration|visa|gdpr|compliance|regulation)\b/i,
   financial: /\b(tax|taxes|invest\w*|pension|mortgage|loan|debt|financ\w*|savings|isa|shares|stocks|crypto|budget|insurance)\b/i,
   employment:/\b(disciplinary|grievance|redundan\w*|dismiss\w*|performance review|appraisal|sick leave|maternity|paternity|hr policy)\b/i
 };
-const FACTS_RE = /\b(statistics?|stats|data|research|sources?|cite|citations?|references?|studies|study|evidence|latest|current|recent|figures|facts?)\b/i;
-const NUMBERS_RE = /\b(calculate|calculation|forecast|estimate|projection|cost|costs|price|pricing|revenue|profit|percent|percentage|roi)\b|%/i;
+let FACTS_RE = /\b(statistics?|stats|data|research|sources?|cite|citations?|references?|studies|study|evidence|latest|current|recent|figures|facts?)\b/i;
+let NUMBERS_RE = /\b(calculate|calculation|forecast|estimate|projection|cost|costs|price|pricing|revenue|profit|percent|percentage|roi)\b|%/i;
 
 function detectRisks(text){
   const out = [];
@@ -1078,9 +1080,9 @@ function outputPhrase(chips, text){
   const parts = [];
   if (by.format.length) parts.push('Use ' + joinAnd(by.format) + '.');
   if (by.length.length) parts.push('Keep it ' + joinAnd(by.length) + '.');
-  const tone = by.tone.filter(t => t !== 'UK English spelling');
+  const tone = by.tone.filter(t => t !== OUTPUT_CHIPS.tone.items.uk);
   if (tone.length) parts.push('Tone: ' + joinAnd(tone) + '.');
-  if (by.tone.includes('UK English spelling')) parts.push('Use UK English spelling.');
+  if ((chips || []).includes('uk')) parts.push('Use UK English spelling.');
   if ((text || '').trim()) parts.push(sentence(text));
   return parts.join(' ');
 }
@@ -1094,7 +1096,7 @@ function joinAnd(arr){
    (b) spotting when one field already covers another dimension ("email to
    my manager" already names the audience), so learners aren't told to
    repeat themselves. Heuristic by design — the UI says so. */
-const DETECTORS = {
+let DETECTORS = {
   goal: /\b(write|draft|create|make|give|list|explain|summari[sz]e|help|plan|suggest|compare|analy[sz]e|tell|describe|generate|rewrite|translate|design|review|prepare|outline|find|calculate|recommend|produce|brainstorm|turn|convert|check|improve|edit|proofread|teach|show)\b/i,
   context: /\b(because|since|as i|as we|i am|i'm|we are|we're|i have|we have|i've|we've|background|currently|the situation|context|my (team|company|organisation|organization|business|job|role|class|school|project|department|situation)|our (team|company|organisation|organization|business|product|customers?|clients?)|for my|here (is|are) (my|the|our)|following (notes|text|information)|tomorrow|next week|deadline)\b/i,
   audience: /\b((ask|asking|tell|telling|email|emailing|message|messaging|reply to|replying to|write to|writing to|invite|inviting|thank|thanking|remind|reminding) (my|a|an|the|our) (manager|boss|team|client|customer|colleague|friend|teacher|landlord|tutor|line manager|director|staff|students?|parents?)|for (a |an |the |my |our )?([A-Z]{2,} )?(beginners?|starters|joiners|employees|volunteers|members|users|patients|candidates|applicants|leaders|teachers|pupils|residents|visitors|managers?|team|staff|colleagues?|clients?|customers?|students?|learners?|parents?|children|kids|executives?|board|stakeholders?|readers?|audience|public|non-?technical|experts?|newcomers?|someone|people who|year-olds?)|to (my|a|an|the|our) (manager|boss|team|client|customer|colleague|friend|teacher|landlord|tutor|line manager|hr|director)|audience|readers?|aimed at|pitched at|\d+-year-olds?|year-olds?|beginners?|non-?technical|little (previous |prior )?(\w+ )?(experience|knowledge)|no (prior|previous) (experience|knowledge))\b/i,
@@ -1416,7 +1418,7 @@ function technicalSettingsHTML(temp, note){
 }
 
 /* ---------- 6a. Privacy checks ---------- */
-const PRIVACY_PATTERNS = [
+let PRIVACY_PATTERNS = [
   { id:'email',   label:'an email address',      ph:'[EMAIL]',       re:/[\w.+-]+@[\w-]+\.[\w.-]+/g },
   { id:'phone',   label:'a phone number',        ph:'[PHONE]',       re:/(?:\+44\s?7\d{3}|\b07\d{3})\s?\d{3}\s?\d{3}\b|\b0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4}\b/g },
   { id:'card',    label:'what looks like a card or account number', ph:'[CARD NUMBER]', re:/\b(?:\d[ -]?){13,19}\b/g },
@@ -1449,17 +1451,25 @@ function privacyNoticeHTML(hits, fixFn){
 }
 
 /* ---------- 6b. Framework recommendation ---------- */
+/* Word lists used to suggest a framework (translations add their own). */
+let FW_HINTS = {
+  tools: /\b(search|browse|look up|web|tool|api|database|spreadsheet lookup)\b/,
+  gather: /\b(find|research|gather|book|check)\b/,
+  options: /\b(options?|alternatives?|approaches|which (is|should)|choose between|compare)\b/,
+  precise: /\b(forecast|exactly|precise|calculate|accurate|double-check|verify)\b/,
+  big: /\b(design|build|model|strategy|framework|overhaul|from scratch|complex|multi-part)\b/
+};
 function recommendFramework(text, typeHint){
   const t = (text || '').toLowerCase();
   const type = typeHint || detectTaskType(t) || 'other';
   if (!t.trim()) return null;
-  if (/\b(search|browse|look up|web|tool|api|database|spreadsheet lookup)\b/.test(t) && /\b(find|research|gather|book|check)\b/.test(t))
+  if (FW_HINTS.tools.test(t) && FW_HINTS.gather.test(t))
     return { id:'react', reason:'your task involves gathering information or taking actions step by step. ReAct structures a think → act → check loop. It only really works when the AI has tools such as web search.' };
-  if (/\b(options?|alternatives?|approaches|which (is|should)|choose between|compare)\b/.test(t))
+  if (FW_HINTS.options.test(t))
     return { id:'tot', reason:'you\'re choosing between several possible approaches. Tree-of-Thought asks AI to explore each option and judge them against clear criteria before recommending one.' };
-  if (/\b(forecast|exactly|precise|calculate|accurate|double-check|verify)\b/.test(t) && type === 'analyse')
+  if (FW_HINTS.precise.test(t) && type === 'analyse')
     return { id:'selfconsistency', reason:'getting one reliable answer matters here. Self-Consistency has AI solve the problem in more than one way and compare the results.' };
-  if (/\b(design|build|model|strategy|framework|overhaul|from scratch|complex|multi-part)\b/.test(t) && ['plan','analyse','other','document'].includes(type))
+  if (FW_HINTS.big.test(t) && ['plan','analyse','other','document'].includes(type))
     return { id:'leasttomost', reason:'this is a big problem that\'s easier to solve in smaller pieces. Least-to-Most breaks it down and builds up from the simplest part.' };
   if (type === 'analyse')
     return { id:'cot', reason:'your task needs reasoning, not just writing. Chain-of-Thought asks AI to work through the problem in stages before giving its answer.' };
@@ -1469,6 +1479,8 @@ function recommendFramework(text, typeHint){
     return { id:'race', reason:'the quality of this task depends heavily on background information. RACE (Role, Action, Context, Expectations) puts the context front and centre.' };
   return { id:null, reason:'this looks like a simple request. You don\'t need a framework. A clear request that says what you want is enough.' };
 }
+
+/* LOCALE-PATTERNS: translated editions replace this line with their own word lists. */
 /* Framework definitions — carried over verbatim from v1 (fields, help, tips, placeholders, accents, motifs). */
 const FRAMEWORKS = {
   "rise": {
@@ -2062,6 +2074,7 @@ const FW_TEACH = {
   }
 };
 const LEVEL_ORDER = ['beginner','intermediate','advanced'];
+const LEVEL_NAME = { beginner:'beginner', intermediate:'intermediate', advanced:'advanced' };
 const LEVEL_TEXT = {
   beginner:'Good first frameworks. Simple structures for everyday tasks.',
   intermediate:'For reasoning, decisions and bigger problems.',

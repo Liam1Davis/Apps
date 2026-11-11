@@ -2540,7 +2540,9 @@
 
   function edition(){
     var p = location.pathname.toLowerCase();
-    return p.indexOf('adhd') >= 0 ? 'ADHD-friendly' : p.indexOf('dyslexia') >= 0 ? 'Dyslexia-friendly' : 'Standard';
+    var ed = p.indexOf('adhd') >= 0 ? 'ADHD-friendly' : p.indexOf('dyslexia') >= 0 ? 'Dyslexia-friendly' : 'Standard';
+    var lang = (document.documentElement.lang || 'en').slice(0, 2).toLowerCase();
+    return lang === 'en' ? ed : ed + ' · ' + lang;
   }
   function pageLabel(){
     var h = location.hash || '#/';
@@ -2607,6 +2609,103 @@
       send.disabled = false; send.textContent = 'Send feedback';
     });
   });
+})();
+</script>
+<!-- ===== Language menu (Standard edition and its translations) ============
+     Adds a "Language" section to the Settings panel, language links to the
+     footer, and a one-time suggestion when the browser prefers a language we
+     have. It never switches language by itself. The English page lives at the
+     site root; each translation at <code>/index.html (e.g. es/index.html).
+     ======================================================================== -->
+<style>
+  .lang-list{display:flex;flex-direction:column;gap:6px;}
+  .lang-list a{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;
+    border:1px solid var(--border, #ccc);color:inherit;text-decoration:none;}
+  .lang-list a:hover{border-color:var(--accent, #4F46E5);}
+  .lang-list a[aria-current]{border-color:var(--accent, #4F46E5);font-weight:700;}
+  .lang-list a[aria-current]::after{content:"✓";}
+  .footer-langs{margin:6px 0 0;font-size:.9rem;}
+  .footer-langs a{color:var(--muted, inherit);}
+  .footer-langs a[aria-current]{font-weight:700;text-decoration:none;}
+  .lang-suggest{position:relative;z-index:50;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;
+    padding:10px 16px;background:var(--panel, #fff);border-bottom:1px solid var(--border, #ccc);font-size:.95rem;}
+  .lang-suggest a{font-weight:700;color:var(--accent, #4F46E5);}
+  .lang-suggest button{background:none;border:0;color:var(--muted, #555);font:inherit;cursor:pointer;text-decoration:underline;padding:6px;}
+</style>
+<script>
+(function(){
+  var LANGS = [
+    { code:'en', name:'English',       dir:'' },
+    { code:'es', name:'Español',       dir:'es/' },
+    { code:'ms', name:'Bahasa Melayu', dir:'ms/' }
+  ];
+  var UI = {
+    en:{ heading:'Language', suggest:'This site is also in {name}.', view:'View in {name}', no:'No thanks' },
+    es:{ heading:'Idioma',   suggest:'Este sitio también está en {name}.', view:'Ver en {name}', no:'No, gracias' },
+    ms:{ heading:'Bahasa',   suggest:'Laman ini juga tersedia dalam {name}.', view:'Lihat dalam {name}', no:'Tidak, terima kasih' }
+  };
+  var here = (document.documentElement.lang || 'en').slice(0, 2).toLowerCase();
+  if (!UI[here]) here = 'en';
+  var root = here === 'en' ? '' : '../';
+  function href(L){ return root + L.dir + (location.hash || ''); }
+  function links(cls){
+    return LANGS.map(function(L){
+      return '<a href="' + href(L) + '" lang="' + L.code + '" hreflang="' + L.code + '"' + (L.code === here ? ' aria-current="true"' : '') + ' data-lang-link="' + L.code + '">' + L.name + '</a>';
+    }).join(cls === 'footer' ? ' · ' : '');
+  }
+  // Keep the current page when switching language.
+  window.addEventListener('hashchange', function(){
+    document.querySelectorAll('[data-lang-link]').forEach(function(a){
+      var L = LANGS.filter(function(x){ return x.code === a.getAttribute('data-lang-link'); })[0];
+      a.setAttribute('href', href(L));
+    });
+  });
+  // Settings panel section
+  var panel = document.getElementById('settings-panel');
+  if (panel){
+    var sec = document.createElement('div');
+    sec.className = 'settings-section';
+    sec.innerHTML = '<h4>' + UI[here].heading + ' <span aria-hidden="true">🌐</span></h4><nav class="lang-list" aria-label="' + UI[here].heading + '">' + links('panel') + '</nav>';
+    var first = panel.querySelector('.settings-section');
+    panel.insertBefore(sec, first || null);
+  }
+  // Footer line
+  var foot = document.querySelector('.site-footer .footer-links');
+  if (foot){
+    var p = document.createElement('nav');
+    p.className = 'footer-langs';
+    p.setAttribute('aria-label', UI[here].heading);
+    p.innerHTML = '<span aria-hidden="true">🌐</span> ' + links('footer');
+    foot.parentNode.insertBefore(p, foot.nextSibling);
+  }
+  // One-time suggestion if the browser prefers another language we have.
+  var KEY = 'ldLangSuggestDone';
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch(e){}
+  if (!dismissed){
+    var prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
+    var want = null;
+    for (var i = 0; i < prefs.length; i++){
+      var c = String(prefs[i]).slice(0, 2).toLowerCase();
+      if (c === here) break;               // the page is already in a preferred language
+      var m = LANGS.filter(function(L){ return L.code === c; })[0];
+      if (m){ want = m; break; }
+    }
+    if (want){
+      var t = UI[want.code];
+      var bar = document.createElement('div');
+      bar.className = 'lang-suggest';
+      bar.setAttribute('role', 'region');
+      bar.setAttribute('aria-label', t.heading);
+      bar.lang = want.code;
+      bar.innerHTML = '<span>' + t.suggest.replace('{name}', want.name) + '</span> <a href="' + href(want) + '" data-lang-link="' + want.code + '">' + t.view.replace('{name}', want.name) + '</a> <button type="button">' + t.no + '</button>';
+      var done = function(){ try { localStorage.setItem(KEY, '1'); } catch(e){} };
+      bar.querySelector('a').addEventListener('click', done);
+      bar.querySelector('button').addEventListener('click', function(){ done(); bar.remove(); });
+      var tb = document.querySelector('.topbar');
+      document.body.insertBefore(bar, tb || document.body.firstChild);
+    }
+  }
 })();
 </script>
     <p class="analytics-badge">
@@ -3012,7 +3111,7 @@ const TASK_TYPES = {
 };
 const TASK_ORDER = ['question','message','document','explain','summarise','ideas','analyse','plan','other'];
 
-const TYPE_PATTERNS = [
+let TYPE_PATTERNS = [
   ['summarise', /\b(summari[sz]e|summary|rewrite|re-write|rephrase|shorten|proof-?read|tidy up|translate|simplify|condense|tl;?dr)\b/i],
   ['message',   /\b(e-?mails?|messages?|reply|respond to|letter|text to|whatsapp|linkedin post|tweet|post for|invitation|invite|thank[- ]you|cover letter|announcement)\b/i],
   ['document',  /\b(report|essay|article|blog|proposal|policy|document|guide|handbook|presentation|slides|newsletter|cv|résumé|resume|job (description|advert)|press release|briefing|case study|lesson plan|speech)\b/i],
@@ -3035,14 +3134,14 @@ function detectTaskType(text){
 }
 
 /* High-stakes topics get task-specific quality controls. */
-const RISK_PATTERNS = {
+let RISK_PATTERNS = {
   health:    /\b(medical|medicine|medication|symptoms?|diagnos\w*|health|illness|disease|dose|dosage|pregnan\w*|mental health|treatment|nhs|gp)\b/i,
   legal:     /\b(legal|law|laws|lawyer|solicitor|contract|lease|tenancy|court|tribunal|lawsuit|liability|immigration|visa|gdpr|compliance|regulation)\b/i,
   financial: /\b(tax|taxes|invest\w*|pension|mortgage|loan|debt|financ\w*|savings|isa|shares|stocks|crypto|budget|insurance)\b/i,
   employment:/\b(disciplinary|grievance|redundan\w*|dismiss\w*|performance review|appraisal|sick leave|maternity|paternity|hr policy)\b/i
 };
-const FACTS_RE = /\b(statistics?|stats|data|research|sources?|cite|citations?|references?|studies|study|evidence|latest|current|recent|figures|facts?)\b/i;
-const NUMBERS_RE = /\b(calculate|calculation|forecast|estimate|projection|cost|costs|price|pricing|revenue|profit|percent|percentage|roi)\b|%/i;
+let FACTS_RE = /\b(statistics?|stats|data|research|sources?|cite|citations?|references?|studies|study|evidence|latest|current|recent|figures|facts?)\b/i;
+let NUMBERS_RE = /\b(calculate|calculation|forecast|estimate|projection|cost|costs|price|pricing|revenue|profit|percent|percentage|roi)\b|%/i;
 
 function detectRisks(text){
   const out = [];
@@ -3069,9 +3168,9 @@ function outputPhrase(chips, text){
   const parts = [];
   if (by.format.length) parts.push('Use ' + joinAnd(by.format) + '.');
   if (by.length.length) parts.push('Keep it ' + joinAnd(by.length) + '.');
-  const tone = by.tone.filter(t => t !== 'UK English spelling');
+  const tone = by.tone.filter(t => t !== OUTPUT_CHIPS.tone.items.uk);
   if (tone.length) parts.push('Tone: ' + joinAnd(tone) + '.');
-  if (by.tone.includes('UK English spelling')) parts.push('Use UK English spelling.');
+  if ((chips || []).includes('uk')) parts.push('Use UK English spelling.');
   if ((text || '').trim()) parts.push(sentence(text));
   return parts.join(' ');
 }
@@ -3085,7 +3184,7 @@ function joinAnd(arr){
    (b) spotting when one field already covers another dimension ("email to
    my manager" already names the audience), so learners aren't told to
    repeat themselves. Heuristic by design — the UI says so. */
-const DETECTORS = {
+let DETECTORS = {
   goal: /\b(write|draft|create|make|give|list|explain|summari[sz]e|help|plan|suggest|compare|analy[sz]e|tell|describe|generate|rewrite|translate|design|review|prepare|outline|find|calculate|recommend|produce|brainstorm|turn|convert|check|improve|edit|proofread|teach|show)\b/i,
   context: /\b(because|since|as i|as we|i am|i'm|we are|we're|i have|we have|i've|we've|background|currently|the situation|context|my (team|company|organisation|organization|business|job|role|class|school|project|department|situation)|our (team|company|organisation|organization|business|product|customers?|clients?)|for my|here (is|are) (my|the|our)|following (notes|text|information)|tomorrow|next week|deadline)\b/i,
   audience: /\b((ask|asking|tell|telling|email|emailing|message|messaging|reply to|replying to|write to|writing to|invite|inviting|thank|thanking|remind|reminding) (my|a|an|the|our) (manager|boss|team|client|customer|colleague|friend|teacher|landlord|tutor|line manager|director|staff|students?|parents?)|for (a |an |the |my |our )?([A-Z]{2,} )?(beginners?|starters|joiners|employees|volunteers|members|users|patients|candidates|applicants|leaders|teachers|pupils|residents|visitors|managers?|team|staff|colleagues?|clients?|customers?|students?|learners?|parents?|children|kids|executives?|board|stakeholders?|readers?|audience|public|non-?technical|experts?|newcomers?|someone|people who|year-olds?)|to (my|a|an|the|our) (manager|boss|team|client|customer|colleague|friend|teacher|landlord|tutor|line manager|hr|director)|audience|readers?|aimed at|pitched at|\d+-year-olds?|year-olds?|beginners?|non-?technical|little (previous |prior )?(\w+ )?(experience|knowledge)|no (prior|previous) (experience|knowledge))\b/i,
@@ -3407,7 +3506,7 @@ function technicalSettingsHTML(temp, note){
 }
 
 /* ---------- 6a. Privacy checks ---------- */
-const PRIVACY_PATTERNS = [
+let PRIVACY_PATTERNS = [
   { id:'email',   label:'an email address',      ph:'[EMAIL]',       re:/[\w.+-]+@[\w-]+\.[\w.-]+/g },
   { id:'phone',   label:'a phone number',        ph:'[PHONE]',       re:/(?:\+44\s?7\d{3}|\b07\d{3})\s?\d{3}\s?\d{3}\b|\b0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4}\b/g },
   { id:'card',    label:'what looks like a card or account number', ph:'[CARD NUMBER]', re:/\b(?:\d[ -]?){13,19}\b/g },
@@ -3440,17 +3539,25 @@ function privacyNoticeHTML(hits, fixFn){
 }
 
 /* ---------- 6b. Framework recommendation ---------- */
+/* Word lists used to suggest a framework (translations add their own). */
+let FW_HINTS = {
+  tools: /\b(search|browse|look up|web|tool|api|database|spreadsheet lookup)\b/,
+  gather: /\b(find|research|gather|book|check)\b/,
+  options: /\b(options?|alternatives?|approaches|which (is|should)|choose between|compare)\b/,
+  precise: /\b(forecast|exactly|precise|calculate|accurate|double-check|verify)\b/,
+  big: /\b(design|build|model|strategy|framework|overhaul|from scratch|complex|multi-part)\b/
+};
 function recommendFramework(text, typeHint){
   const t = (text || '').toLowerCase();
   const type = typeHint || detectTaskType(t) || 'other';
   if (!t.trim()) return null;
-  if (/\b(search|browse|look up|web|tool|api|database|spreadsheet lookup)\b/.test(t) && /\b(find|research|gather|book|check)\b/.test(t))
+  if (FW_HINTS.tools.test(t) && FW_HINTS.gather.test(t))
     return { id:'react', reason:'your task involves gathering information or taking actions step by step. ReAct structures a think → act → check loop. It only really works when the AI has tools such as web search.' };
-  if (/\b(options?|alternatives?|approaches|which (is|should)|choose between|compare)\b/.test(t))
+  if (FW_HINTS.options.test(t))
     return { id:'tot', reason:'you\'re choosing between several possible approaches. Tree-of-Thought asks AI to explore each option and judge them against clear criteria before recommending one.' };
-  if (/\b(forecast|exactly|precise|calculate|accurate|double-check|verify)\b/.test(t) && type === 'analyse')
+  if (FW_HINTS.precise.test(t) && type === 'analyse')
     return { id:'selfconsistency', reason:'getting one reliable answer matters here. Self-Consistency has AI solve the problem in more than one way and compare the results.' };
-  if (/\b(design|build|model|strategy|framework|overhaul|from scratch|complex|multi-part)\b/.test(t) && ['plan','analyse','other','document'].includes(type))
+  if (FW_HINTS.big.test(t) && ['plan','analyse','other','document'].includes(type))
     return { id:'leasttomost', reason:'this is a big problem that\'s easier to solve in smaller pieces. Least-to-Most breaks it down and builds up from the simplest part.' };
   if (type === 'analyse')
     return { id:'cot', reason:'your task needs reasoning, not just writing. Chain-of-Thought asks AI to work through the problem in stages before giving its answer.' };
@@ -3460,6 +3567,8 @@ function recommendFramework(text, typeHint){
     return { id:'race', reason:'the quality of this task depends heavily on background information. RACE (Role, Action, Context, Expectations) puts the context front and centre.' };
   return { id:null, reason:'this looks like a simple request. You don\'t need a framework. A clear request that says what you want is enough.' };
 }
+
+/* LOCALE-PATTERNS: translated editions replace this line with their own word lists. */
 /* Framework definitions — carried over verbatim from v1 (fields, help, tips, placeholders, accents, motifs). */
 const FRAMEWORKS = {
   "rise": {
@@ -4053,6 +4162,7 @@ const FW_TEACH = {
   }
 };
 const LEVEL_ORDER = ['beginner','intermediate','advanced'];
+const LEVEL_NAME = { beginner:'beginner', intermediate:'intermediate', advanced:'advanced' };
 const LEVEL_TEXT = {
   beginner:'Good first frameworks. Simple structures for everyday tasks.',
   intermediate:'For reasoning, decisions and bigger problems.',
@@ -5556,7 +5666,7 @@ defineRoute('lab', (view, id) => {
   const tile = id => {
     const fw = FRAMEWORKS[id], t = FW_TEACH[id];
     return `<div class="fw-tile" style="--card-accent:${fw.accent}">
-      <span class="tag lvl-${t.level}" style="align-self:flex-start">${t.level}</span>
+      <span class="tag lvl-${t.level}" style="align-self:flex-start">${LEVEL_NAME[t.level]}</span>
       <h3><span class="card-motif" aria-hidden="true">${motifSVG(fw.motif)}</span>${escapeHtml(fw.name)}</h3>
       <span class="stageline">${escapeHtml(fw.stageLine)}</span>
       <p>${escapeHtml(t.what)}</p>
@@ -5589,12 +5699,12 @@ defineRoute('lab', (view, id) => {
       <p class="muted small">If you've used the Builder, you already know the ingredients: goal, context, audience, requirements, output, success and constraints. Each framework is a recipe that combines some of them for a particular kind of task.</p>
       <div class="challenge-recap-table-wrap"><table class="challenge-recap-table">
         <thead><tr><th>Framework</th><th>Combines</th><th>Best for</th><th>Not ideal for</th><th>Level</th></tr></thead>
-        <tbody>${FW_IDS.map(id => `<tr><td><a class="text-link" href="#/lab/${id}">${escapeHtml(FRAMEWORKS[id].name)}</a></td><td>${escapeHtml(blocks[id])}</td><td>${escapeHtml(FW_TEACH[id].when[0])}</td><td>${escapeHtml(FW_TEACH[id].whenNot[0])}</td><td><span class="tag lvl-${FW_TEACH[id].level}">${FW_TEACH[id].level}</span></td></tr>`).join('')}</tbody>
+        <tbody>${FW_IDS.map(id => `<tr><td><a class="text-link" href="#/lab/${id}">${escapeHtml(FRAMEWORKS[id].name)}</a></td><td>${escapeHtml(blocks[id])}</td><td>${escapeHtml(FW_TEACH[id].when[0])}</td><td>${escapeHtml(FW_TEACH[id].whenNot[0])}</td><td><span class="tag lvl-${FW_TEACH[id].level}">${LEVEL_NAME[FW_TEACH[id].level]}</span></td></tr>`).join('')}</tbody>
       </table></div>
       <p class="muted small" style="margin:0"><strong>Advanced doesn't mean better.</strong> It means more specialised. For most everyday tasks, a clear request or a beginner framework is the right choice.</p>
     </section>
     ${LEVEL_ORDER.map(lv => `
-      <h2 class="section-title" style="text-transform:capitalize">${lv}</h2>
+      <h2 class="section-title" style="text-transform:capitalize">${LEVEL_NAME[lv]}</h2>
       <p class="section-intro">${escapeHtml(LEVEL_TEXT[lv])}</p>
       <div class="fw-grid">${FW_IDS.filter(id => FW_TEACH[id].level === lv).map(tile).join('')}</div>`).join('')}
     <div class="panel" style="margin-top:24px">
@@ -5623,7 +5733,7 @@ function labComputed(){
   const filled = v.filter(Boolean).length;
   const details = [
     ['Framework used', fw.name + ' (for you; the name isn\'t in the prompt)'],
-    ['Level', t.level.charAt(0).toUpperCase() + t.level.slice(1)],
+    ['Level', LEVEL_NAME[t.level].charAt(0).toUpperCase() + LEVEL_NAME[t.level].slice(1)],
     ['Parts filled', `${filled} of ${fw.fields.length}`],
     ['Prompt readiness', body ? `${VERDICT_LABEL[ev.verdict]} (${ev.keyGood} of ${ev.keyCount} key areas)` : 'Not started'],
     ['Reliability layer', REL_LABEL[rel.level]]
@@ -5668,7 +5778,7 @@ function renderFrameworkPage(view, id){
   <div class="shell fw-page" style="--fw-accent:${fw.accent}">
     <a class="back-link" href="#/lab">← All frameworks</a>
     <header class="page-hero" style="margin-top:14px">
-      <p class="eyebrow"><span class="tag lvl-${t.level}">${t.level}</span> &nbsp;Prompt Lab</p>
+      <p class="eyebrow"><span class="tag lvl-${t.level}">${LEVEL_NAME[t.level]}</span> &nbsp;Prompt Lab</p>
       <h1 style="display:flex;align-items:center;gap:14px"><span class="fw-motif" aria-hidden="true" style="color:${fw.accent}">${motifSVG(fw.motif)}</span>${escapeHtml(fw.name)}</h1>
       <p class="fw-stageline">${escapeHtml(fw.stageLine)}</p>
       <p class="lede">${escapeHtml(fw.subHeader)}</p>
